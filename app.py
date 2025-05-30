@@ -1,12 +1,17 @@
 import streamlit as st
-# Must be the first Streamlit command
-st.set_page_config(layout="wide", page_title="Cultural Heritage Hub")
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+st.set_page_config(page_title="DeVine", layout="wide")
 from streamlit_option_menu import option_menu
-from streamlit_calendar import calendar
 from events import events
 from calender import culturalCalendar
+from journey import journeyPlanner
+from artFormGallery import artFormGallery
 import folium
 from maps import maps
+from chatbot import chatbot
 from streamlit_folium import folium_static
 # 1=sidebar menu, 2=horizontal menu, 3=horizontal menu w/ custom menu
 EXAMPLE_NO = 1
@@ -53,7 +58,7 @@ def streamlit_menu(example=1):
         with st.sidebar:
             selected = option_menu(
                 menu_title=None,  # required
-                options=["Home", "Cultural Calendar", "Maps", "Art-form Gallery", "Journery Planner"],  # required
+                options=["Home", "Cultural Calendar", "Maps", "Art-form Gallery", "Journery Planner", "Chatbot"],  # required
                 icons=["house", "calendar", "map"],  # optional
                 menu_icon="cast",  # optional
                 default_index=0,  # optional
@@ -99,36 +104,147 @@ def streamlit_menu(example=1):
 selected = streamlit_menu(example=EXAMPLE_NO)
 
 def home():
-    st.markdown('<p class="big-font">Welcome to the Cultural Heritage Hub</p>', unsafe_allow_html=True)
+    st.markdown('<p class="big-font">Cultural Heritage Hub</p>', unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
+    # Load datasets
+    foreign_visits = pd.read_csv("assets/foreignVisit.csv")
+    festivals = pd.read_csv("assets/festivals_kaggle.csv")
+    quarterly_visitors = pd.read_csv("assets/Country Quater Wise Visitors.csv")
+
+    # Create dashboard layout
+    tab1, tab2 = st.tabs(["Visitor Analytics", "Festival Calendar"])
     
-    with col1:
-        st.markdown(
-            '<div class="custom-text">'
-            '<h3>Discover Traditional Art Forms</h3>'
-            '<p>Immerse yourself in the rich tapestry of cultural heritage, '
-            'from classical dance forms to ancient musical traditions.</p>'
-            '</div>',
-            unsafe_allow_html=True
+    with tab1:
+        col1, col2 = st.columns([2,1])
+        
+        with col1:
+            # Map visualization
+            st.markdown('<div class="custom-text"><h3>Foreign Visitors Distribution</h3></div>', unsafe_allow_html=True)
+            
+            # Add year selector
+            year = "2019"
+            column_name = f"Foreign - {year}"
+            
+            fig = px.scatter_mapbox(foreign_visits, 
+                                  lat="latitude", 
+                                  lon="longitude",
+                                  size=column_name,
+                                  hover_name="States/UTs *",
+                                  hover_data=[column_name],
+                                  color="Growth rate - FTV 2019/18",
+                                  zoom=3.5,
+                                  mapbox_style="carto-positron")
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            # Top 5 states
+            st.markdown('<div class="custom-text"><h3>Top 5 States</h3></div>', unsafe_allow_html=True)
+            metric = st.radio("Select Metric", ["Foreign Visitors", "Domestic Visitors", "Growth Rate"])
+            
+            if metric == "Foreign Visitors":
+                column = "Foreign - 2019"
+            elif metric == "Domestic Visitors":
+                column = "Domestic - 2019"
+            else:
+                column = "Growth rate - FTV 2019/18"
+                
+            top_5 = foreign_visits.nlargest(5, column)
+            fig2 = px.bar(top_5, 
+                         x='States/UTs *', 
+                         y=column,
+                         title=f"Top 5 States by {metric}")
+            st.plotly_chart(fig2, use_container_width=True)
+        
+        # Quarterly trends
+        st.markdown('<div class="custom-text"><h3>Quarterly Visitor Trends by Country</h3></div>', unsafe_allow_html=True)
+        
+        # Clean column names for quarterly data
+        quarters = [col for col in quarterly_visitors.columns if 'quarter' in col.lower() and '2019' in col]
+        
+        # Country selector with search
+        selected_country = st.selectbox(
+            "Select Country",
+            quarterly_visitors['Country of Nationality'].unique(),
+            index=0
         )
-    
-    with col2:
-        st.markdown(
-            '<div class="custom-text">'
-            '<h3>Upcoming Cultural Events</h3>'
-            '<p>• Traditional Dance Festival - Dec 15</p>'
-            '<p>• Art Exhibition - Dec 20</p>'
-            '<p>• Cultural Workshop - Dec 25</p>'
-            '</div>',
-            unsafe_allow_html=True
+        
+        # Get data for selected country
+        country_data = quarterly_visitors[quarterly_visitors['Country of Nationality'] == selected_country]
+        
+        # Create quarterly trend visualization
+        quarter_values = country_data[quarters].iloc[0].values
+        quarter_labels = ['Q1', 'Q2', 'Q3', 'Q4']
+        
+        fig3 = go.Figure()
+        fig3.add_trace(go.Bar(x=quarter_labels, y=quarter_values))
+        fig3.update_layout(
+            title=f"Quarterly Visitors from {selected_country} (2019)",
+            xaxis_title="Quarter",
+            yaxis_title="Visitors %"
         )
+        st.plotly_chart(fig3, use_container_width=True)
+        
+        # Additional visualization - Country comparison
+        st.markdown('<div class="custom-text"><h3>Country Comparison</h3></div>', unsafe_allow_html=True)
+        selected_countries = st.multiselect(
+            "Select Countries to Compare",
+            quarterly_visitors['Country of Nationality'].unique(),
+            default=quarterly_visitors['Country of Nationality'].unique()[:3]
+        )
+        
+        comparison_data = quarterly_visitors[
+            quarterly_visitors['Country of Nationality'].isin(selected_countries)
+        ]
+        
+        fig4 = go.Figure()
+        for country in selected_countries:
+            country_data = comparison_data[
+                comparison_data['Country of Nationality'] == country
+            ]
+            fig4.add_trace(go.Scatter(
+                x=quarter_labels,
+                y=country_data[quarters].iloc[0].values,
+                name=country,
+                mode='lines+markers'
+            ))
+            
+        fig4.update_layout(
+            title="Country-wise Quarterly Comparison (2019)",
+            xaxis_title="Quarter",
+            yaxis_title="Visitors %"
+        )
+        st.plotly_chart(fig4, use_container_width=True)
+    
+    with tab2:
+        # Festival Calendar
+        st.markdown('<div class="custom-text"><h3>Upcoming Festivals</h3></div>', unsafe_allow_html=True)
+        festivals['Date'] = pd.to_datetime(festivals['Date'] + ' ' + festivals['Year'].astype(str))
+        current_festivals = festivals.sort_values('Date')[['Festival name', 'Date', 'Day']].head(10)
+        st.dataframe(current_festivals, use_container_width=True)
+
+    # Add custom CSS for dashboard
+    st.markdown("""
+        <style>
+        .custom-text {
+            background-color: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: white;
+        }
+        .plotly-graph {
+            background-color: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
 
 
 
 # Add background before the menu
-add_bg_from_url()
+# add_bg_from_url()
 
 if selected == "Home":
     home()
@@ -144,3 +260,6 @@ if selected == "Art-form Gallery":
 
 if selected == "Journery Planner":
     journeyPlanner()
+
+if selected == "Chatbot":
+    chatbot()
