@@ -86,28 +86,53 @@ def journeyPlanner():
     st.title("Journey Planner and Guide to your Cultural Journey")
     st.subheader("Explore the Rich Cultural Heritage of India")
 
+    # Top 10 destinations data
+    destinations = {
+        "Delhi": {
+            "images": ["assets/delhi/image1.jpg", "assets/delhi/image2.jpg", "assets/delhi/image3.jpg"],
+            "region": "North India",
+            "route": "Via NH44 and Delhi Airport (DEL)",
+            "attractions": ["Red Fort", "Qutub Minar", "Humayun's Tomb"]
+        },
+        "Mumbai": {
+            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
+            "region": "Maharashtra",
+            "route": "Via Mumbai Airport (BOM)",
+            "attractions": ["Gateway of India", "Marine Drive", "Elephanta Caves"]
+        },
+        "Varanasi": {
+            "images": ["assets/varanasi/image1.jpg", "assets/varanasi/image2.jpg", "assets/varanasi/image3.jpg"],
+            "region": "Uttar Pradesh",
+            "route": "Via NH19 and Varanasi Airport (VNS)",
+            "attractions": ["Ghats", "Kashi Vishwanath Temple", "Sarnath"]
+        },
+        "Agra": {
+            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
+            "region": "Uttar Pradesh",
+            "route": "Via Yamuna Expressway",
+            "attractions": ["Taj Mahal", "Agra Fort", "Fatehpur Sikri"]
+        },
+        "Jaipur": {
+            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
+            "region": "Rajasthan",
+            "route": "Via NH48 and Jaipur Airport (JAI)",
+            "attractions": ["Amber Fort", "City Palace", "Hawa Mahal"]
+        },
+        "Pune": {
+            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
+            "region": "Maharashtra",
+            "route": "Via Mumbai-Pune Expressway",
+            "attractions": ["Shaniwar Wada", "Aga Khan Palace", "Dagdusheth Temple"]
+        }
+    }
+
     # Initialize session state
     if 'show_route_form' not in st.session_state:
         st.session_state.show_route_form = {}
     
-    # Load places data with proper encoding
-    places_df = pd.read_csv("assets/places.csv", encoding='latin1')
-    
-    # Create destinations data using places dataframe
-    destinations = {}
-    for city in places_df['city'].unique():
-        city_data = places_df[places_df['city'] == city]
-        if len(city_data) >= 3:  # Only include cities with at least 3 attractions
-            destinations[city] = {
-                "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
-                "region": city_data.iloc[0]['state'],
-                "route": f"Via major highways and {city} transport hub",
-                "attractions": city_data['popular_destination'].tolist()[:3]
-            }
-
     # Display destinations in rows
     for destination, data in destinations.items():
-        st.markdown(f"### {destination}")
+        st.markdown(f"###  📍 {destination}")
         
         cols = st.columns(3)
         for idx, image_path in enumerate(data["images"]):
@@ -133,7 +158,7 @@ def journeyPlanner():
                     st.write("Plan your journey:")
                     origin = st.text_input("Your starting point:")
                     mode = st.radio("Mode of transport:", ["Road", "Train", "Flight"])
-                    
+                    url = f"https://www.google.com/search?q={origin}+to+{destination}+{mode}&oq=mumbai+to+delhi&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyEggBEEUYORiRAhixAxiABBiKBTIHCAIQABiABDINCAMQABiRAhiABBiKBTIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDQyODNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
                     # Form submit button
                     if st.form_submit_button("Get Route Details"):
                         if origin:
@@ -155,7 +180,7 @@ def journeyPlanner():
                                 dest_coords = get_coordinates(destination)
                                 
                                 if all(origin_coords) and all(dest_coords):
-                                    # Plot route on map
+                                    # Plot route on map                                    
                                     st.markdown("### Route Map")
                                     m = plot_route(origin_coords, dest_coords)
                                     folium_static(m)
@@ -165,3 +190,12 @@ def journeyPlanner():
                             st.error("Please enter starting point")
         
         st.markdown("---")
+
+if st.button("Book Now"):
+    st.markdown(f"""
+        <meta http-equiv="refresh" content="0;url={url}">
+        <script>
+            window.location.href = "{url}";
+         </script>
+        If you are not redirected automatically, <a href="{url}">click here</a>.
+    """, unsafe_allow_html=True)
