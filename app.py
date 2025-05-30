@@ -1,8 +1,12 @@
 import streamlit as st
+# Must be the first Streamlit command
+st.set_page_config(layout="wide", page_title="Cultural Heritage Hub")
 from streamlit_option_menu import option_menu
 from streamlit_calendar import calendar
 from events import events
+from calender import culturalCalendar
 import folium
+from maps import maps
 from streamlit_folium import folium_static
 # 1=sidebar menu, 2=horizontal menu, 3=horizontal menu w/ custom menu
 EXAMPLE_NO = 1
@@ -121,155 +125,6 @@ def home():
         )
 
 
-def culturalCalendar():
-    st.title("Cultural Calendar")
-    calendar_options = {
-        "initialView": "dayGridMonth",
-        "editable": True,
-        "selectable": True,
-        "eventContent": """function(arg) {
-            let container = document.createElement('div');
-            container.style.display = 'flex';
-            container.style.alignItems = 'center';
-            
-            if (arg.event.extendedProps && arg.event.extendedProps.image) {
-                let img = document.createElement('img');
-                img.src = arg.event.extendedProps.image;
-                img.style.width = '20px';
-                img.style.height = '20px';
-                img.style.marginRight = '5px';
-                img.style.objectFit = 'cover';
-                img.style.borderRadius = '50%';
-                container.appendChild(img);
-            }
-            
-            let title = document.createElement('span');
-            title.innerText = arg.event.title;
-            container.appendChild(title);
-            
-            return { domNodes: [container] };
-        }""",
-        "headerToolbar": {
-            "left": "prev,next today",
-            "center": "title",
-            "right": "dayGridMonth,timeGridWeek,timeGridDay"
-        },
-        "height": 600,
-        "aspectRatio": 1.35
-    }
-
-    selected_event = calendar(events=events, options=calendar_options)
-
-    if selected_event:
-        st.write("Selected event:", selected_event)
-        if "url" in selected_event:
-            st.markdown(f"[View Event Details]({selected_event['url']})")
-
-
-def maps():
-    try:
-        st.title("Traditional Art Forms Across India")
-        
-        # Add CSS to ensure map container is visible
-        st.markdown("""
-            <style>
-                .folium-map {
-                    width: 100%;
-                    height: 500px;
-                    border: 2px solid #ddd;
-                    border-radius: 8px;
-                    z-index: 1;
-                    background-color: white;
-                }
-                [data-testid="stVerticalBlock"] {
-                    gap: 0px;
-                }
-            </style>
-        """, unsafe_allow_html=True)
-        
-        # Create map with explicit width and height
-        m = folium.Map(
-            location=[20.5937, 78.9629],
-            zoom_start=4,
-            width='100%',
-            height='100%'
-        )
-        
-        # Art forms data for different states
-        art_locations = [
-            {"name": "Madhubani Painting", "state": "Bihar", "loc": [25.6838, 85.7977], 
-             "desc": "Traditional folk art from Bihar, known for geometric patterns"},
-            {"name": "Warli Art", "state": "Maharashtra", "loc": [19.7515, 75.7139], 
-             "desc": "Tribal art form using basic geometric shapes"},
-            {"name": "Kathakali", "state": "Kerala", "loc": [10.8505, 76.2711], 
-             "desc": "Classical dance form with elaborate costumes"},
-            {"name": "Tanjore Painting", "state": "Tamil Nadu", "loc": [11.1271, 78.6569], 
-             "desc": "Classical painting style with gold foil overlays"},
-            {"name": "Phad Painting", "state": "Rajasthan", "loc": [27.0238, 74.2179], 
-             "desc": "Scroll painting depicting folk tales"},
-            {"name": "Pattachitra", "state": "Odisha", "loc": [20.9517, 85.0985], 
-             "desc": "Traditional cloth-based scroll painting"},
-        ]
-        
-        # Debug information
-        st.write("Map Status: Initializing...")
-        
-        # Display filters and map with adjusted column ratio
-        col1, col2 = st.columns([4, 1])  # Adjusted ratio
-        
-        with col2:
-            st.markdown("### Filter Art Forms")
-            selected_states = st.multiselect(
-                "Select States",
-                options=list(set(art["state"] for art in art_locations)),
-                default=list(set(art["state"] for art in art_locations))
-            )
-        
-        with col1:
-            # Show filtered map with container styling
-            filtered_map = folium.Map(
-                location=[20.5937, 78.9629],
-                zoom_start=4,
-                width=800,  # Explicit width
-                height=600  # Explicit height
-            )
-            
-            # Add markers
-            for art in art_locations:
-                if art['state'] in selected_states:
-                    html = f"""
-                        <div style='width: 200px'>
-                            <h4>{art['name']}</h4>
-                            <p><b>State:</b> {art['state']}</p>
-                            <p>{art['desc']}</p>
-                        </div>
-                    """
-                    folium.Marker(
-                        location=art['loc'],
-                        popup=folium.Popup(html, max_width=300),
-                        tooltip=art['name'],
-                        icon=folium.Icon(color='red', icon='info-sign')
-                    ).add_to(filtered_map)
-            
-            # Debug information
-            st.write("Rendering map...")
-            
-            # Render map with error handling
-            try:
-                folium_static(filtered_map, width=800, height=600)
-                st.success("Map loaded successfully!")
-            except Exception as e:
-                st.error(f"Error rendering map: {str(e)}")
-                
-    except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
-        st.write("Please try refreshing the page.")
-
-def artFormGallery():
-    pass
-
-def journeyPlanner():
-    pass
 
 
 # Add background before the menu
@@ -281,7 +136,7 @@ if selected == "Home":
 if selected == "Cultural Calendar":
     culturalCalendar()
     
-if selected == "maps":
+if selected == "Maps":
     maps()
 
 if selected == "Art-form Gallery":
