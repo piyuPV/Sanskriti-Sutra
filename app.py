@@ -1,9 +1,11 @@
 import streamlit as st
+# Set page config must be the first Streamlit command
+st.set_page_config(page_title="DeVine", layout="wide")
+
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-
-st.set_page_config(page_title="DeVine", layout="wide")
+from learnQuiz import learnQuiz
 from streamlit_option_menu import option_menu
 from events import events
 from calender import culturalCalendar
@@ -58,8 +60,8 @@ def streamlit_menu(example=1):
         with st.sidebar:
             selected = option_menu(
                 menu_title=None,  # required
-                options=["Home", "Cultural Calendar", "Maps", "Art-form Gallery", "Journery Planner", "Chatbot"],  # required
-                icons=['house', 'calendar-event-fill', 'geo-alt-fill', 'palette-fill', 'compass-fill', 'chat-quote-fill'],
+                options=["Home", "Cultural Calendar", "Maps", "Art-form Gallery", "Journery Planner", "Learn and Play Quiz", "Chatbot"],  # required
+                icons=['house-fill', 'calendar-event-fill', 'geo-alt-fill', 'palette-fill', 'compass-fill', 'book-fill','chat-quote-fill'],
                 menu_icon="bank",  # optional
                 default_index=0,  # optional
             )
@@ -260,6 +262,9 @@ if selected == "Art-form Gallery":
 
 if selected == "Journery Planner":
     journeyPlanner()
+
+if selected == "Learn and Play Quiz":  
+    learnQuiz()
 
 if selected == "Chatbot":
     chatbot()
