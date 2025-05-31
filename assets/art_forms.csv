@@ -1,0 +1,9 @@
+ art_form_name,region,style,description,image_path
+Madhubani,Bihar,Traditional,"Traditional folk art from Bihar, known for its geometric patterns and vibrant colors",assets/ganesh.png
+Warli,Maharashtra,Tribal,"Ancient tribal art form characterized by simple geometric shapes and stick figures",assets/ganesh.png
+Pattachitra,Odisha,Traditional,"Traditional cloth-based scroll painting from Odisha",assets/ganesh.png
+Kalamkari,Andhra Pradesh,Traditional,"Hand-painted or block-printed cotton textile art",assets/ganesh.png
+Gond,Madhya Pradesh,Tribal,"Tribal art form known for its intricate patterns and nature-inspired motifs",assets/ganesh.png
+Kalamkari,Telangana,Traditional,"Traditional hand-painted or block-printed cotton textile art",assets/ganesh.png
+Cheriyal,Telangana,Traditional,"Traditional scroll painting art form from Telangana",assets/ganesh.png
+Kalighat,West Bengal,Traditional,"Traditional painting style from Kolkata",assets/ganesh.png
