@@ -23,7 +23,7 @@ def add_bg_from_url():
         f"""
         <style>
         .stApp {{
-            background-image: url("data:image/png;base64,{get_base64_of_bin_file("image.png")}");
+            background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/bg.avif")}");
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
@@ -59,8 +59,8 @@ def streamlit_menu(example=1):
             selected = option_menu(
                 menu_title=None,  # required
                 options=["Home", "Cultural Calendar", "Maps", "Art-form Gallery", "Journery Planner", "Chatbot"],  # required
-                icons=["house", "calendar", "map"],  # optional
-                menu_icon="cast",  # optional
+                icons=['house', 'calendar-event-fill', 'geo-alt-fill', 'palette-fill', 'compass-fill', 'chat-quote-fill'],
+                menu_icon="bank",  # optional
                 default_index=0,  # optional
             )
         return selected
@@ -244,7 +244,7 @@ def home():
 
 
 # Add background before the menu
-# add_bg_from_url()
+add_bg_from_url()
 
 if selected == "Home":
     home()

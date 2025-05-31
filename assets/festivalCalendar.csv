@@ -1,0 +1,85 @@
+Id,Day,Date,Year,Festival name,Cultural Festival
+1,Monday,January 1,2024,New Year's Day,No
+2,Wednesday,January 1,2025,New Year's Day,No
+3,Thursday,January 1,2026,New Year's Day,No
+4,Saturday,January 13,2024,Lohri,Yes
+5,Monday,January 13,2025,Lohri,Yes
+6,Tuesday,January 13,2026,Lohri,Yes
+7,Monday,January 15,2024,Makar Sankranti,Yes
+8,Tuesday,January 14,2025,Makar Sankranti,Yes
+9,Wednesday,January 14,2026,Makar Sankranti,Yes
+10,Monday,January 15,2024,Pongal,Yes
+11,Tuesday,January 14,2025,Pongal,Yes
+12,Wednesday,January 14,2026,Pongal,Yes
+13,Friday,January 26,2024,Republic Day,No
+14,Sunday,January 26,2025,Republic Day,No
+15,Monday,January 26,2026,Republic Day,No
+16,Wednesday,February 14,2024,Vasant Panchami,Yes
+17,Monday,February 3,2025,Vasant Panchami,Yes
+18,Friday,January 23,2026,Vasant Panchami,Yes
+19,Friday,March 8,2024,Maha Shivaratri,No
+20,Wednesday,February 26,2025,Maha Shivaratri,No
+21,Sunday,February 15,2026,Maha Shivaratri,No
+22,Monday,March 25,2024,Holi,Yes
+23,Friday,March 14,2025,Holi,Yes
+24,Tuesday,March 3,2026,Holi,Yes
+25,Wednesday,April 17,2024,Ram Navami,No
+26,Sunday,April 6,2025,Ram Navami,No
+27,Friday,March 27,2026,Ram Navami,No
+28,Friday,March 29,2024,Good Friday,No
+29,Friday,April 18,2025,Good Friday,No
+30,Friday,April 3,2026,Good Friday,No
+31,Saturday,April 13,2024,Baisakhi,Yes
+32,Sunday,April 13,2025,Baisakhi,Yes
+33,Monday,April 13,2026,Baisakhi,Yes
+34,Wednesday,April 10,2024,Eid al-Fitr,No
+35,Sunday,March 30,2025,Eid al-Fitr,No
+36,Friday,March 20,2026,Eid al-Fitr,No
+37,Thursday,May 23,2024,Buddha Purnima,No
+38,Monday,May 12,2025,Buddha Purnima,No
+39,Friday,May 1,2026,Buddha Purnima,No
+40,Sunday,July 7,2024,Rath Yatra,Yes
+41,Friday,June 27,2025,Rath Yatra,Yes
+42,Thursday,July 16,2026,Rath Yatra,Yes
+43,Wednesday,July 17,2024,Muharram,No
+44,Sunday,July 6,2025,Muharram,No
+45,Friday,June 26,2026,Muharram,No
+46,Monday,August 19,2024,Raksha Bandhan,Yes
+47,Saturday,August 9,2025,Raksha Bandhan,Yes
+48,Friday,August 28,2026,Raksha Bandhan,Yes
+49,Thursday,August 15,2024,Independence Day,No
+50,Friday,August 15,2025,Independence Day,No
+51,Saturday,August 15,2026,Independence Day,No
+52,Monday,August 26,2024,Janmashtami,No
+53,Saturday,August 16,2025,Janmashtami,No
+54,Saturday,September 5,2026,Janmashtami,No
+55,Saturday,September 7,2024,Ganesh Chaturthi,Yes
+56,Wednesday,August 27,2025,Ganesh Chaturthi,Yes
+57,Wednesday,September 16,2026,Ganesh Chaturthi,Yes
+58,Thursday,September 5,2024,Onam,Yes
+59,Thursday,September 4,2025,Onam,Yes
+60,Monday,August 24,2026,Onam,Yes
+61,Wednesday,October 2,2024,Gandhi Jayanti,No
+62,Thursday,October 2,2025,Gandhi Jayanti,No
+63,Friday,October 2,2026,Gandhi Jayanti,No
+64,Thursday,October 3,2024,Navratri Begins,Yes
+65,Monday,September 22,2025,Navratri Begins,Yes
+66,Saturday,October 10,2026,Navratri Begins,Yes
+67,Friday,October 11,2024,Durga Puja,Yes
+68,Tuesday,September 30,2025,Durga Puja,Yes
+69,Monday,October 19,2026,Durga Puja,Yes
+70,Saturday,October 12,2024,Dussehra,Yes
+71,Wednesday,October 1,2025,Dussehra,Yes
+72,Tuesday,October 20,2026,Dussehra,Yes
+73,Sunday,October 20,2024,Karva Chauth,Yes
+74,Thursday,October 9,2025,Karva Chauth,Yes
+75,Wednesday,October 28,2026,Karva Chauth,Yes
+76,Friday,November 1,2024,Diwali,Yes
+77,Monday,October 20,2025,Diwali,Yes
+78,Sunday,November 8,2026,Diwali,Yes
+79,Sunday,November 3,2024,Bhai Dooj,Yes
+80,Wednesday,October 22,2025,Bhai Dooj,Yes
+81,Tuesday,November 10,2026,Bhai Dooj,Yes
+82,Wednesday,December 25,2024,Christmas,No
+83,Thursday,December 25,2025,Christmas,No
+84,Friday,December 25,2026,Christmas,No
