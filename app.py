@@ -9,6 +9,7 @@ from learnQuiz import learnQuiz
 from streamlit_option_menu import option_menu
 from events import events
 from calender import culturalCalendar
+# from c2 import culturalCalendar
 from journey import journeyPlanner
 from artFormGallery import artFormGallery
 import folium
@@ -25,7 +26,7 @@ def add_bg_from_url():
         f"""
         <style>
         .stApp {{
-            background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/bg.avif")}");
+            background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/bg.png")}");
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
