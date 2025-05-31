@@ -50,7 +50,9 @@ def culturalCalendar():
     }
 
     selected = calendar(events=events, options=calendar_options)
+    # st.write("Selected Event Object:", selected)
 
+    # --- Show details if a festival is clicked ---
     # --- Show details if a festival is clicked ---
     if selected and 'eventClick' in selected:
         event_data = selected['eventClick']['event']
@@ -59,42 +61,22 @@ def culturalCalendar():
         if title in df['Festival Name'].values:
             fest = df[df['Festival Name'] == title].iloc[0]
 
-            # Create two columns for image and details
-            col1, col2 = st.columns([1, 1])
+            # Show image
+            image_path = f"assets/{fest['ImageFile']}.jpg"
+            if os.path.exists(image_path):
+                img = Image.open(image_path)
+                img = img.resize((500, 500))
+                st.image(img)
+            else:
+                st.warning(f"Image not found for {fest['Festival Name']}")
 
-            with col1:
-                # Show image
-                image_path = f"assets/{fest['ImageFile']}.jpg"
-                if os.path.exists(image_path):
-                    img = Image.open(image_path)
-                    st.image(img, use_container_width=True)
-                else:
-                    st.warning(f"Image not found for {fest['Festival Name']}")
 
-            with col2:
-                # Show details in a styled container
-                st.markdown("""
-                    <style>
-                    .festival-details {
-                        background-color: rgba(255,255,255,0.1);
-                        padding: 20px;
-                        border-radius: 10px;
-                        margin: 20px 0;
-                        color: white;
-                    }
-                    </style>
-                """, unsafe_allow_html=True)
-                   
-                # st.markdown('<div class="festival-details">', unsafe_allow_html=True)
-                st.markdown(f"### {fest['Festival Name']}")
-                if fest['Cultural Festival'] == 'Yes':
-                    st.markdown(f"**Type:** Cultural Festival")
-                else:
-                    st.markdown(f"**Type:** Religious Festival")
-                st.markdown(f"**Date:** {fest['ParsedDate'].strftime('%Y-%m-%d')}")
-                st.markdown(f"**Day:** {fest['Day']}")
-                st.markdown(f"**Description:** {fest['Description']}")
-                st.markdown('</div>', unsafe_allow_html=True)
+            # Show details
+            st.markdown(f"### {fest['Festival Name']}")
+            st.markdown(f"**Type:** {fest['Cultural Festival']}")
+            st.markdown(f"**Date:** {fest['ParsedDate'].strftime('%Y-%m-%d')}")
+            st.markdown(f"**Day:** {fest['Day']}")
+            st.markdown(f"**Description:** {fest['Description']}")
         else:
             st.error(f"Festival '{title}' not found in data.")
     else:
