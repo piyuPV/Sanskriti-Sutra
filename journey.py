@@ -88,43 +88,56 @@ def journeyPlanner():
 
     # Top 10 destinations data
     destinations = {
-        "Delhi": {
-            "images": ["assets/delhi/image1.jpg", "assets/delhi/image2.jpg", "assets/delhi/image3.jpg"],
-            "region": "North India",
-            "route": "Via NH44 and Delhi Airport (DEL)",
-            "attractions": ["Red Fort", "Qutub Minar", "Humayun's Tomb"]
-        },
-        "Mumbai": {
-            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
-            "region": "Maharashtra",
-            "route": "Via Mumbai Airport (BOM)",
-            "attractions": ["Gateway of India", "Marine Drive", "Elephanta Caves"]
-        },
-        "Varanasi": {
-            "images": ["assets/varanasi/image1.jpg", "assets/varanasi/image2.jpg", "assets/varanasi/image3.jpg"],
-            "region": "Uttar Pradesh",
-            "route": "Via NH19 and Varanasi Airport (VNS)",
-            "attractions": ["Ghats", "Kashi Vishwanath Temple", "Sarnath"]
-        },
-        "Agra": {
-            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
-            "region": "Uttar Pradesh",
-            "route": "Via Yamuna Expressway",
-            "attractions": ["Taj Mahal", "Agra Fort", "Fatehpur Sikri"]
-        },
-        "Jaipur": {
-            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
-            "region": "Rajasthan",
-            "route": "Via NH48 and Jaipur Airport (JAI)",
-            "attractions": ["Amber Fort", "City Palace", "Hawa Mahal"]
-        },
-        "Pune": {
-            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
-            "region": "Maharashtra",
-            "route": "Via Mumbai-Pune Expressway",
-            "attractions": ["Shaniwar Wada", "Aga Khan Palace", "Dagdusheth Temple"]
-        }
+    "Delhi": {
+        "images": ["assets/delhi/del1.jpg", "assets/delhi/del2.jpg", "assets/delhi/del3.jpg"],
+        "region": "North India",
+        "route": "Via NH44 and Delhi Airport (DEL)",
+        "attractions": ["Red Fort", "Qutub Minar", "Humayun's Tomb"]
+    },
+    "Maharashtra": {
+        "images": ["assets/maharashtra/mah1.jpg", "assets/maharashtra/mah2.jpg", "assets/maharashtra/mah3.jpg"],
+        "region": "West India",
+        "route": "Via Mumbai Airport (BOM) or Pune Airport (PNQ)",
+        "attractions": ["Gateway of India", "Ajanta Caves", "Shaniwar Wada"]
+    },
+    "Uttar Pradesh": {
+        "images": ["assets/uttarpradesh/up1.jpg", "assets/uttarpradesh/up2.jpg", "assets/uttarpradesh/up3.jpg"],
+        "region": "North India",
+        "route": "Via NH19 and airports like Varanasi (VNS), Lucknow (LKO)",
+        "attractions": ["Taj Mahal", "Kashi Vishwanath Temple", "Fatehpur Sikri"]
+    },
+    "West Bengal": {
+        "images": ["assets/westbengal/wb1.jpg", "assets/westbengal/wb2.jpg", "assets/westbengal/wb3.jpg"],
+        "region": "East India",
+        "route": "Via Netaji Subhas Chandra Bose International Airport (CCU)",
+        "attractions": ["Victoria Memorial", "Howrah Bridge", "Sundarbans"]
+    },
+    "Kerala": {
+        "images": ["assets/kerala/ker1.jpg", "assets/kerala/ker2.jpg", "assets/kerala/ker3.jpg"],
+        "region": "South India",
+        "route": "Via Cochin International Airport (COK)",
+        "attractions": ["Backwaters of Alleppey", "Munnar Hills", "Padmanabhaswamy Temple"]
+    },
+    "Tamil Nadu": {
+        "images": ["assets/tamilnadu/tn1.jpg", "assets/tamilnadu/tn2.jpg", "assets/tamilnadu/tn3.jpg"],
+        "region": "South India",
+        "route": "Via Chennai Airport (MAA)",
+        "attractions": ["Meenakshi Temple", "Marina Beach", "Mahabalipuram"]
+    },
+    "Rajasthan": {
+        "images": ["assets/rajasthan/raj1.jpg", "assets/rajasthan/raj2.jpg", "assets/rajasthan/raj3.jpg"],
+        "region": "Northwest India",
+        "route": "Via Jaipur Airport (JAI)",
+        "attractions": ["Amber Fort", "City Palace", "Jaisalmer Fort"]
+    },
+    "Punjab": {
+        "images": ["assets/punjab/pun1.jpg", "assets/punjab/pun2.jpg", "assets/punjab/pun3.jpg"],
+        "region": "North India",
+        "route": "Via Amritsar Airport (ATQ) or Chandigarh Airport (IXC)",
+        "attractions": ["Golden Temple", "Wagah Border", "Jallianwala Bagh"]
     }
+}
+
 
     # Initialize session state
     if 'show_route_form' not in st.session_state:
