@@ -102,16 +102,21 @@ def get_translation(key):
 def streamlit_menu(example=1):
     if example == 1:
         with st.sidebar:
-            # Language selector
-            selected_lang = st.selectbox(
-                "🌐 Language/भाषा/मराठी",
-                ["English", "हिंदी", "मराठी"],
-                index=0 if st.session_state.language == 'en' else 
-                      1 if st.session_state.language == 'hi' else 2
+            # Language selector using radio buttons
+            selected_lang = st.radio(
+                "🌐 Select Language/भाषा निवडा/भाषा चुनें",
+                options=["English", "मराठी", "हिंदी"],
+                horizontal=True,
+                index=0 if st.session_state.language == 'en' 
+                      else 1 if st.session_state.language == 'mr'
+                      else 2
             )
-            st.session_state.language = ('en' if selected_lang == "English" else
-                                       'hi' if selected_lang == "हिंदी" else 'mr')
-
+            
+            # Update session state language
+            st.session_state.language = ('en' if selected_lang == "English" 
+                                       else 'mr' if selected_lang == "मराठी" 
+                                       else 'hi')
+            
             # Define menu options with exact keys matching translations
             menu_options = [
                 "Home",
