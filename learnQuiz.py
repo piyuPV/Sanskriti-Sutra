@@ -1,26 +1,10 @@
 import streamlit as st
 import time
 import random
+from utils import get_translation
 
-def learnQuiz():
-    # Initialize all session state variables at the start
-    if 'quiz_started' not in st.session_state:
-        st.session_state.quiz_started = False
-    if 'answers' not in st.session_state:
-        st.session_state.answers = {}
-    if 'score' not in st.session_state:
-        st.session_state.score = 0
-    if 'time_left' not in st.session_state:
-        st.session_state.time_left = 60
-    if 'submitted' not in st.session_state:
-        st.session_state.submitted = False
-    if 'current_questions' not in st.session_state:
-        st.session_state.current_questions = []
-
-    st.title("Learn & Quiz - Indian Cultural Heritage")
-    
-    # Cultural topics and their content
-    topics = {
+# Define topics and quiz_questions at module level
+topics = {
     "Monuments": {
         "Taj Mahal": {
             "image": "assets/learning/tajmahal.jpg",
@@ -192,10 +176,10 @@ def learnQuiz():
             """
         }
     }
+
 }
 
-    # Quiz questions
-    quiz_questions = {
+quiz_questions = {
     "Monuments": [
         {
             "question": "What is the unique feature of the Taj Mahal’s main dome?",
@@ -416,140 +400,116 @@ def learnQuiz():
 
 
 
+def learnQuiz():
+    # Initialize session state variables
+    if 'quiz_started' not in st.session_state:
+        st.session_state.quiz_started = False
+    if 'answers' not in st.session_state:
+        st.session_state.answers = {}
+    if 'score' not in st.session_state:
+        st.session_state.score = 0
+    if 'time_left' not in st.session_state:
+        st.session_state.time_left = 60
+    if 'submitted' not in st.session_state:
+        st.session_state.submitted = False
+    if 'current_questions' not in st.session_state:
+        st.session_state.current_questions = []
+
+    st.title(get_translation("learn_quiz_title"))
+    
     # Topic selection
-    selected_topic = st.selectbox("Select a Topic to Learn:", list(topics.keys()))
+    selected_topic = st.selectbox(get_translation("select_topic"), ["Monuments", "Art Forms", "Festivals"])
 
     # Display content for selected topic
     if selected_topic:
-        st.header(f"Learning about {selected_topic}")
+        st.header(f"{get_translation('learn_about')} {selected_topic}")
         for item, content in topics[selected_topic].items():
-            with st.expander(f"Learn about {item}"):
-                col_left, col_right = st.columns([0.8, 1.2])  # Adjust ratio for image and text
+            with st.expander(f"{get_translation('learn_about')} {item}"):
+                # Add styling
+                st.markdown("""
+                    <style>
+                    .topic-image img {
+                        border-radius: 10px;
+                        transition: transform 0.3s;
+                        width: 100% !important;
+                    }
+                    .topic-image:hover img {
+                        transform: scale(1.02);
+                    }
+                    .description-box {
+                        background-color: rgba(255,255,255,0.1);
+                        padding: 20px;
+                        border-radius: 10px;
+                        margin: 10px 0;
+                        color: white;
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
                 
+                col_left, col_right = st.columns([0.8, 1.2])
                 with col_left:
                     try:
-                        st.markdown("""
-                            <style>
-                            .topic-image {
-                                border-radius: 10px;
-                                transition: transform 0.3s;
-                                width: 100%;
-                            }
-                            .topic-image:hover {
-                                transform: scale(1.02);
-                                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                            }
-                            </style>
-                        """, unsafe_allow_html=True)
-                        # Changed use_column_width to use_container_width
+                        st.markdown('<div class="topic-image">', unsafe_allow_html=True)
                         st.image(content["image"], use_container_width=True, caption=item)
+                        st.markdown('</div>', unsafe_allow_html=True)
                     except:
                         st.error(f"Image not found for {item}")
                 
                 with col_right:
-                    st.markdown("""
-                        <style>
-<<<<<<< HEAD
-                        img {
-                            width: 400px !important;
-                            margin: 0 auto;
-                            display: block;
-=======
-                        .description-box {
-                            background-color: rgba(255,255,255,0.1);
-                            padding: 20px;
-                            border-radius: 10px;
-                            height: 100%;
-                            color: white;
-                            margin-left: 20px;
-                        }
-                        .description-box h3 {
-                            color: #FFD700;
-                            margin-bottom: 15px;
->>>>>>> 3dcdce7bfbc26c94b990bffffbf3014d9736e980
-                        }
-                        </style>
-                    """, unsafe_allow_html=True)
-                    
-                    description_html = content["description"].replace("\n", "<br>")
-                    st.markdown(f"""
-                        <div class="description-box">
-                            <h3>{item}</h3>
-                            {description_html}
-                        </div>
-                    """, unsafe_allow_html=True)
+                    desc_html = content["description"].replace("\n", "<br>")
+                    st.markdown(
+                        f'<div class="description-box">'
+                        f'<h3>{item}</h3>'
+                        f'{desc_html}'
+                        '</div>',
+                        unsafe_allow_html=True
+                    )
 
-        # Start Quiz button
-        if not st.session_state.quiz_started and st.button("Take Quiz"):
+        # Quiz section
+        if not st.session_state.quiz_started and st.button(get_translation("take_quiz")):
             st.session_state.quiz_started = True
             st.session_state.time_left = 60
             st.session_state.submitted = False
             st.session_state.score = 0
-            # Randomly select and store questions
             questions = quiz_questions[selected_topic]
             random.shuffle(questions)
             st.session_state.current_questions = questions[:10]
-            st.rerun()  # Changed from experimental_rerun to rerun
+            st.rerun()
 
-        # Quiz section
+        # Display quiz if started
         if st.session_state.quiz_started:
-            st.header("Quiz Time!")
-            
-            # Display timer
-            st.write(f"Time remaining: {st.session_state.time_left} seconds")
+            st.header(get_translation("quiz_time"))
+            st.write(get_translation("time_remaining").format(st.session_state.time_left))
             
             # Display questions
             for i, q in enumerate(st.session_state.current_questions):
                 st.subheader(f"Q{i+1}: {q['question']}")
                 st.session_state.answers[i] = st.radio(
-                    "Select your answer:",
+                    get_translation("select_answer"),
                     q['options'],
                     key=f"q_{i}",
                     disabled=st.session_state.submitted
                 )
 
-            # Submit button
-            if not st.session_state.submitted and st.button("Submit Quiz"):
+            # Handle quiz submission
+            if not st.session_state.submitted and st.button(get_translation("submit_quiz")):
                 st.session_state.submitted = True
-                # Calculate score
-                score = 0
-                for i, q in enumerate(st.session_state.current_questions):
-                    if st.session_state.answers.get(i) == q['correct']:
-                        score += 1
+                score = sum(1 for i, q in enumerate(st.session_state.current_questions) 
+                          if st.session_state.answers.get(i) == q['correct'])
                 st.session_state.score = score
                 
-            # Display results if submitted
             if st.session_state.submitted:
-                st.success(f"Quiz completed! Your score: {st.session_state.score}/10")
-                if st.button("Take Another Quiz"):
+                st.success(get_translation("quiz_completed").format(st.session_state.score))
+                if st.button(get_translation("take_another")):
                     st.session_state.quiz_started = False
                     st.session_state.submitted = False
-                    st.rerun()  # Changed from experimental_rerun to rerun
+                    st.rerun()
 
-            # Update timer
+            # Timer update
             if not st.session_state.submitted:
                 time.sleep(1)
                 st.session_state.time_left -= 1
                 if st.session_state.time_left <= 0:
                     st.session_state.submitted = True
-                    st.warning("Time's up!")
-                    st.rerun()  # Changed from experimental_rerun to rerun
-
-# Add custom styling
-st.markdown("""
-    <style>
-    .stButton > button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-    }
-    .quiz-container {
-        background-color: rgba(255,255,255,0.1);
-        padding: 20px;
-        border-radius: 10px;
-        margin: 10px 0;
-    }
-    </style>
-""", unsafe_allow_html=True)
+                    st.warning(get_translation("times_up"))
+                    st.rerun()
