@@ -95,7 +95,7 @@ def journeyPlanner():
             "attractions": ["Red Fort", "Qutub Minar", "Humayun's Tomb"]
         },
         "Mumbai": {
-            "images": ["assets/ganesh.png", "assets/ganesh.png", "assets/ganesh.png"],
+            "images": ["assets/mumbai/m1.jpg", "assets/mumbai/m2.jpg", "assets/mumbai/m3.jpg"],
             "region": "Maharashtra",
             "route": "Via Mumbai Airport (BOM)",
             "attractions": ["Gateway of India", "Marine Drive", "Elephanta Caves"]
