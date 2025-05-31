@@ -117,7 +117,7 @@ def streamlit_menu(example=1):
                 "Cultural Calendar", 
                 "Maps",
                 "Art-form Gallery",
-                "Journey Planner",
+                "Journey Planner",  # Fixed spelling of Journey
                 "Learn and Play Quiz",
                 "Chatbot"
             ]
@@ -422,7 +422,7 @@ if selected == "Maps":
 if selected == "Art-form Gallery":
     artFormGallery()
 
-if selected == "Journery Planner":
+if selected == "Journey Planner":  # Fixed spelling to match the menu option
     journeyPlanner()
 
 if selected == "Learn and Play Quiz":  
