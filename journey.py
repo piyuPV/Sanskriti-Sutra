@@ -160,6 +160,7 @@ def journeyPlanner():
                     mode = st.radio("Mode of transport:", ["Road", "Train", "Flight"])
                     url = f"https://www.google.com/search?q={origin}+to+{destination}+{mode}&oq=mumbai+to+delhi&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyEggBEEUYORiRAhixAxiABBiKBTIHCAIQABiABDINCAMQABiRAhiABBiKBTIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDQyODNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
                     # Form submit button
+                    
                     if st.form_submit_button("Get Route Details"):
                         if origin:
                             with st.spinner("Getting route details..."):
@@ -172,18 +173,23 @@ def journeyPlanner():
                                         <p><b>To:</b> {destination}</p>
                                         <p><b>Mode:</b> {mode}</p>
                                         <pre style='color: white; white-space: pre-wrap;'>{route_info}</pre>
+                                        <a href='{url}' target='_blank' rel='noopener noreferrer'>
+                                            <button style='background-color: #FF6B6B; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;'>
+                                                Book Now 🏨
+                                            </button>
+                                        </a>
                                     </div>
                                 """, unsafe_allow_html=True)
                                 
                                 # Get coordinates
                                 origin_coords = get_coordinates(origin)
                                 dest_coords = get_coordinates(destination)
-                                
                                 if all(origin_coords) and all(dest_coords):
                                     # Plot route on map                                    
                                     st.markdown("### Route Map")
                                     m = plot_route(origin_coords, dest_coords)
                                     folium_static(m)
+                                
                                 else:
                                     st.error("Could not find coordinates for one or both cities")
                         else:
@@ -191,11 +197,3 @@ def journeyPlanner():
         
         st.markdown("---")
 
-if st.button("Book Now"):
-    st.markdown(f"""
-        <meta http-equiv="refresh" content="0;url={url}">
-        <script>
-            window.location.href = "{url}";
-         </script>
-        If you are not redirected automatically, <a href="{url}">click here</a>.
-    """, unsafe_allow_html=True)
