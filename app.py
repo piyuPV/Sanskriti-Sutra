@@ -104,12 +104,14 @@ def streamlit_menu(example=1):
         with st.sidebar:
             # Language selector
             selected_lang = st.selectbox(
-                "🌐 Language/भाषा",
-                ["English", "हिंदी"],
-                index=0 if st.session_state.language == 'en' else 1
+                "🌐 Language/भाषा/मराठी",
+                ["English", "हिंदी", "मराठी"],
+                index=0 if st.session_state.language == 'en' else 
+                      1 if st.session_state.language == 'hi' else 2
             )
-            st.session_state.language = 'en' if selected_lang == "English" else 'hi'
-            
+            st.session_state.language = ('en' if selected_lang == "English" else
+                                       'hi' if selected_lang == "हिंदी" else 'mr')
+
             # Define menu options with exact keys matching translations
             menu_options = [
                 "Home",
@@ -121,9 +123,11 @@ def streamlit_menu(example=1):
                 "Chatbot"
             ]
             
-            # Translate menu options if Hindi is selected
+            # Translate menu options if Hindi or Marathi is selected
             if st.session_state.language == 'hi':
                 menu_options = [TRANSLATIONS['hi'].get(option, option) for option in menu_options]
+            elif st.session_state.language == 'mr':
+                menu_options = [TRANSLATIONS['mr'].get(option, option) for option in menu_options]
             
             selected = option_menu(
                 menu_title=None,
@@ -133,9 +137,9 @@ def streamlit_menu(example=1):
                 default_index=0,
             )
             
-            # Convert Hindi selection back to English for routing
-            if st.session_state.language == 'hi':
-                reverse_translations = {v: k for k, v in TRANSLATIONS['hi'].items()}
+            # Convert Hindi or Marathi selection back to English for routing
+            if st.session_state.language == 'hi' or st.session_state.language == 'mr':
+                reverse_translations = {v: k for k, v in TRANSLATIONS['hi' if st.session_state.language == 'hi' else 'mr'].items()}
                 selected = reverse_translations.get(selected, selected)
                 
         return selected
