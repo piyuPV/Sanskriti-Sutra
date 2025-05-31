@@ -423,7 +423,17 @@ def learnQuiz():
         for item, content in topics[selected_topic].items():
             with st.expander(f"Learn about {item}"):
                 try:
-                    st.image(content["image"], caption=item)
+                    # Set standard image size with width=800 and maintain aspect ratio
+                    st.markdown("""
+                        <style>
+                        img {
+                            width: 800px !important;
+                            margin: 0 auto;
+                            display: block;
+                        }
+                        </style>
+                    """, unsafe_allow_html=True)
+                    st.image(content["image"], caption=item, use_container_width=False)
                 except:
                     st.error(f"Image not found for {item}")
                 st.markdown(content["description"])

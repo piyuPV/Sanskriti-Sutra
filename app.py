@@ -108,13 +108,14 @@ selected = streamlit_menu(example=EXAMPLE_NO)
 def home():
     st.markdown('<p class="big-font">Cultural Heritage Hub</p>', unsafe_allow_html=True)
     
-    # Load datasets
-    foreign_visits = pd.read_csv("assets/foreignVisit.csv")
-    festivals = pd.read_csv("assets/festivals_kaggle.csv")
-    quarterly_visitors = pd.read_csv("assets/Country Quater Wise Visitors.csv")
+    # Load datasets with proper encoding
+    foreign_visits = pd.read_csv("assets/foreignVisit.csv", encoding='latin1')
+    festivals = pd.read_csv("assets/festivals_kaggle.csv", encoding='latin1')
+    quarterly_visitors = pd.read_csv("assets/Country Quater Wise Visitors.csv", encoding='latin1')
+    places_data = pd.read_csv("assets/places.csv", encoding='latin1')  # Added encoding parameter
 
-    # Create dashboard layout
-    tab1, tab2 = st.tabs(["Visitor Analytics", "Festival Calendar"])
+    # Create dashboard layout with new Cultural Insights tab
+    tab1, tab2, tab3 = st.tabs(["Visitor Analytics", "Cultural Insights", "Festival Calendar"])
     
     with tab1:
         col1, col2 = st.columns([2,1])
@@ -218,6 +219,84 @@ def home():
         st.plotly_chart(fig4, use_container_width=True)
     
     with tab2:
+        st.markdown('<div class="custom-text"><h3>Cultural Heritage Distribution</h3></div>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            # Art Forms Distribution
+            art_forms = places_data[places_data['interest'].str.contains('Art|Culture|Heritage', na=False)]
+            art_by_state = art_forms.groupby('state').size().reset_index(name='count')
+            
+            fig_art = px.bar(art_by_state.nlargest(10, 'count'), 
+                           x='state', 
+                           y='count',
+                           title='Top 10 States by Cultural Heritage Sites',
+                           color='count',
+                           color_continuous_scale='Oranges')
+            st.plotly_chart(fig_art, use_container_width=True)
+
+        with col2:
+            # Interest Categories Distribution
+            interest_dist = places_data['interest'].value_counts()
+            fig_interest = px.pie(values=interest_dist.values, 
+                                names=interest_dist.index,
+                                title='Distribution of Cultural Experiences',
+                                color_discrete_sequence=px.colors.sequential.RdBu)
+            st.plotly_chart(fig_interest, use_container_width=True)
+
+        # Cultural Experience Map
+        st.markdown('<div class="custom-text"><h3>Cultural Experience Map</h3></div>', unsafe_allow_html=True)
+        
+        selected_experience = st.selectbox(
+            "Select Cultural Experience",
+            places_data['interest'].unique()
+        )
+        
+        filtered_places = places_data[places_data['interest'] == selected_experience]
+        
+        fig_map = px.scatter_mapbox(filtered_places,
+                                  lat='latitude',
+                                  lon='longitude',
+                                  hover_name='popular_destination',
+                                  hover_data=['city', 'state', 'google_rating'],
+                                  color='google_rating',
+                                  size_max=15,
+                                  zoom=4,
+                                  title=f'Locations for {selected_experience}',
+                                  mapbox_style="carto-positron")
+        st.plotly_chart(fig_map, use_container_width=True)
+
+        # Responsible Tourism Metrics
+        st.markdown('<div class="custom-text"><h3>Sustainable Tourism Insights</h3></div>', unsafe_allow_html=True)
+        
+        col3, col4 = st.columns([1, 1])
+        
+        with col3:
+            # Price Range Distribution
+            price_bins = [0, 50, 200, 500, 1000, float('inf')]
+            price_labels = ['Free', 'Budget', 'Moderate', 'Premium', 'Luxury']
+            places_data['price_category'] = pd.cut(places_data['price_fare'], 
+                                                 bins=price_bins, 
+                                                 labels=price_labels)
+            
+            price_dist = places_data['price_category'].value_counts()
+            fig_price = px.pie(values=price_dist.values,
+                             names=price_dist.index,
+                             title='Price Range Distribution of Cultural Experiences',
+                             color_discrete_sequence=px.colors.sequential.Greens)
+            st.plotly_chart(fig_price, use_container_width=True)
+
+        with col4:
+            # Rating Distribution
+            rating_dist = places_data.groupby('interest')['google_rating'].mean().sort_values(ascending=False)
+            fig_rating = px.bar(rating_dist,
+                              title='Average Ratings by Experience Type',
+                              color=rating_dist.values,
+                              color_continuous_scale='Viridis')
+            st.plotly_chart(fig_rating, use_container_width=True)
+
+    with tab3:
         # Festival Calendar
         st.markdown('<div class="custom-text"><h3>Upcoming Festivals</h3></div>', unsafe_allow_html=True)
         festivals['Date'] = pd.to_datetime(festivals['Date'] + ' ' + festivals['Year'].astype(str))
