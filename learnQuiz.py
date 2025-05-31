@@ -427,7 +427,7 @@ def learnQuiz():
                     st.markdown("""
                         <style>
                         img {
-                            width: 800px !important;
+                            width: 400px !important;
                             margin: 0 auto;
                             display: block;
                         }
