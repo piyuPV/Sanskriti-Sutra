@@ -6,6 +6,7 @@ from streamlit_calendar import calendar
 from datetime import datetime
 from PIL import Image
 import os
+from utils import get_translation
 
 
 # --- Load data ---
@@ -37,7 +38,7 @@ def culturalCalendar():
         })
 
     # --- Streamlit UI ---
-    st.title("🎊 Indian Festival Calendar")
+    st.title(get_translation("festival_calendar_title"))
 
     calendar_options = {
         "initialView": "dayGridMonth",
@@ -86,11 +87,8 @@ def culturalCalendar():
                 """, unsafe_allow_html=True)
                    
                 # st.markdown('<div class="festival-details">', unsafe_allow_html=True)
-                st.markdown(f"### {fest['Festival Name']}")
-                if fest['Cultural Festival'] == 'Yes':
-                    st.markdown(f"**Type:** Cultural Festival")
-                else:
-                    st.markdown(f"**Type:** Religious Festival")
+                st.markdown(f"### {get_translation('festival_details')}")
+                st.markdown(f"**{get_translation('festival_type')}:** {get_translation('cultural_festival') if fest['Cultural Festival'] == 'Yes' else get_translation('religious_festival')}")
                 st.markdown(f"**Date:** {fest['ParsedDate'].strftime('%Y-%m-%d')}")
                 st.markdown(f"**Day:** {fest['Day']}")
                 st.markdown(f"**Description:** {fest['Description']}")

@@ -1,7 +1,8 @@
 import streamlit as st
+from utils import get_translation
 
 def artFormGallery():
-    st.title("Art Forms Gallery")
+    st.title(get_translation("art_gallery_title"))
 
     images = [
     "assets/gallery/48.jpg",
@@ -55,17 +56,10 @@ def artFormGallery():
     # Display images in a grid
     for idx, image_path in enumerate(images):
         with cols[idx % 3]:  # Use modulo to cycle through columns
-            # st.image(image_path, caption=f"Art Form {idx + 1}", use_container_width=True)
-            st.image(image_path, caption=f" ", use_container_width=True)
-            
-            # Add description under each image
-            # st.markdown("""
-            #     <div style='background-color: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; margin: 5px 0; color: white;'>
-            #         <h4 style='margin:0;'>Art Form Details</h4>
-            #         <p style='margin:5px 0;'>Region: North India</p>
-            #         <p style='margin:5px 0;'>Style: Traditional</p>
-            #     </div>
-            # """, unsafe_allow_html=True)
+            try:
+                st.image(image_path, caption=" ", use_container_width=True)
+            except:
+                st.error(get_translation("image_not_found"))
 
     # Add custom CSS for better spacing
     st.markdown("""

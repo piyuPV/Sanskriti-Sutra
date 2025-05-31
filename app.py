@@ -1,13 +1,13 @@
 import streamlit as st
-from translations import TRANSLATIONS
+
+# Set page config must be the first Streamlit command
+st.set_page_config(page_title="DeVine", layout="wide")
 
 # Initialize session state for language
 if 'language' not in st.session_state:
     st.session_state.language = 'en'
 
-# Set page config must be the first Streamlit command
-st.set_page_config(page_title="DeVine", layout="wide")
-
+from translations import TRANSLATIONS
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -15,7 +15,6 @@ from learnQuiz import learnQuiz
 from streamlit_option_menu import option_menu
 from events import events
 from calender import culturalCalendar
-# from c2 import culturalCalendar
 from journey import journeyPlanner
 from artFormGallery import artFormGallery
 import folium
@@ -103,13 +102,20 @@ def get_translation(key):
 def streamlit_menu(example=1):
     if example == 1:
         with st.sidebar:
-            # Language selector
-            selected_lang = st.selectbox(
-                "🌐 Language/भाषा",
-                ["English", "हिंदी"],
-                index=0 if st.session_state.language == 'en' else 1
+            # Language selector using radio buttons
+            selected_lang = st.radio(
+                "🌐 Select Language/भाषा निवडा/भाषा चुनें",
+                options=["English", "मराठी", "हिंदी"],
+                horizontal=True,
+                index=0 if st.session_state.language == 'en' 
+                      else 1 if st.session_state.language == 'mr'
+                      else 2
             )
-            st.session_state.language = 'en' if selected_lang == "English" else 'hi'
+            
+            # Update session state language
+            st.session_state.language = ('en' if selected_lang == "English" 
+                                       else 'mr' if selected_lang == "मराठी" 
+                                       else 'hi')
             
             # Define menu options with exact keys matching translations
             menu_options = [
@@ -122,9 +128,11 @@ def streamlit_menu(example=1):
                 "Chatbot"
             ]
             
-            # Translate menu options if Hindi is selected
+            # Translate menu options if Hindi or Marathi is selected
             if st.session_state.language == 'hi':
                 menu_options = [TRANSLATIONS['hi'].get(option, option) for option in menu_options]
+            elif st.session_state.language == 'mr':
+                menu_options = [TRANSLATIONS['mr'].get(option, option) for option in menu_options]
             
             selected = option_menu(
                 menu_title=None,
@@ -134,9 +142,9 @@ def streamlit_menu(example=1):
                 default_index=0,
             )
             
-            # Convert Hindi selection back to English for routing
-            if st.session_state.language == 'hi':
-                reverse_translations = {v: k for k, v in TRANSLATIONS['hi'].items()}
+            # Convert Hindi or Marathi selection back to English for routing
+            if st.session_state.language == 'hi' or st.session_state.language == 'mr':
+                reverse_translations = {v: k for k, v in TRANSLATIONS['hi' if st.session_state.language == 'hi' else 'mr'].items()}
                 selected = reverse_translations.get(selected, selected)
                 
         return selected
