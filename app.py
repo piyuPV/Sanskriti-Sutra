@@ -25,6 +25,13 @@ def add_bg_from_url():
     st.markdown(
         f"""
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        
+        * {{
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
+        }}
+        
         .stApp {{
             background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/bg.png")}");
             background-attachment: fixed;
@@ -33,6 +40,7 @@ def add_bg_from_url():
         }}
         .big-font {{
             font-size: 50px !important;
+            font-weight: 700 !important;
             color: #fff;
             text-shadow: 2px 2px 4px #000;
         }}
@@ -42,6 +50,21 @@ def add_bg_from_url():
             padding: 15px;
             border-radius: 5px;
             margin: 10px 0;
+        }}
+        
+        .stMarkdown, .stText, .stSelectbox, .stRadio, div.stButton > button, .stTab {{
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
+        }}
+        
+        div[data-testid="stSidebarNav"] li div {{
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
+        }}
+
+        .plotly-graph text {{
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
         }}
         </style>
         """,

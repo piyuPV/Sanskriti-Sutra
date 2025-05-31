@@ -16,8 +16,7 @@ def maps():
         col_left, col_right = st.columns([7,3])
         
         with col_left:
-            # Load heritage sites data
-            heritage_df = pd.read_csv("assets/WORLD HERITAGE SITES 2024 UPDATED.csv", encoding='latin1')
+            # Load places data since we don't have heritage_df
             places_df = pd.read_csv("assets/places.csv", encoding='latin1')
             
             # Create base map
@@ -31,25 +30,63 @@ def maps():
             temples_cluster = MarkerCluster(name="Temples")
             monuments_cluster = MarkerCluster(name="Monuments")
             
-            # Add markers from heritage sites
-            for idx, row in heritage_df.iterrows():
-                try:
-                    popup_html = f"""
-                        <div style="width:200px">
-                            <h4>{row['Site']}</h4>
-                            <p><b>Location:</b> {row['Location']}</p>
-                            <p><b>Category:</b> {row['Category']}</p>
-                        </div>
-                    """
-                    folium.Marker(
-                        [row['Latitude'], row['Longitude']], 
-                        popup=popup_html,
-                        icon=folium.Icon(color='red', icon='info-sign')
-                    ).add_to(heritage_cluster)
-                except:
-                    continue
-                    
+            # Filter and add heritage sites markers
+            heritage_sites = places_df[places_df['interest'].str.contains('Heritage|Cultural', na=False)]
+            temple_sites = places_df[places_df['interest'].str.contains('Religious|Temple|Spiritual', na=False)]
+            monument_sites = places_df[places_df['interest'].str.contains('Monument|Fort|Palace', na=False)]
+            
+            # Add heritage markers
+            for _, row in heritage_sites.iterrows():
+                popup_html = f"""
+                    <div style="width:200px">
+                        <h4>{row['popular_destination']}</h4>
+                        <p><b>Location:</b> {row['city']}, {row['state']}</p>
+                        <p><b>Rating:</b> {row['google_rating']}⭐</p>
+                        <p><b>Category:</b> {row['interest']}</p>
+                    </div>
+                """
+                folium.Marker(
+                    [row['latitude'], row['longitude']], 
+                    popup=popup_html,
+                    icon=folium.Icon(color='red', icon='info-sign')
+                ).add_to(heritage_cluster)
+            
+            # Add temple markers
+            for _, row in temple_sites.iterrows():
+                popup_html = f"""
+                    <div style="width:200px">
+                        <h4>{row['popular_destination']}</h4>
+                        <p><b>Location:</b> {row['city']}, {row['state']}</p>
+                        <p><b>Rating:</b> {row['google_rating']}⭐</p>
+                        <p><b>Category:</b> {row['interest']}</p>
+                    </div>
+                """
+                folium.Marker(
+                    [row['latitude'], row['longitude']], 
+                    popup=popup_html,
+                    icon=folium.Icon(color='purple', icon='home')
+                ).add_to(temples_cluster)
+            
+            # Add monument markers
+            for _, row in monument_sites.iterrows():
+                popup_html = f"""
+                    <div style="width:200px">
+                        <h4>{row['popular_destination']}</h4>
+                        <p><b>Location:</b> {row['city']}, {row['state']}</p>
+                        <p><b>Rating:</b> {row['google_rating']}⭐</p>
+                        <p><b>Category:</b> {row['interest']}</p>
+                    </div>
+                """
+                folium.Marker(
+                    [row['latitude'], row['longitude']], 
+                    popup=popup_html,
+                    icon=folium.Icon(color='orange', icon='building')
+                ).add_to(monuments_cluster)
+            
+            # Add all clusters to map
             heritage_cluster.add_to(m1)
+            temples_cluster.add_to(m1)
+            monuments_cluster.add_to(m1)
             layer_control.add_to(m1)
             
             folium_static(m1, width=800, height=600)
