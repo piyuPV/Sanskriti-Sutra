@@ -1,13 +1,13 @@
 import streamlit as st
-from translations import TRANSLATIONS
+
+# Set page config must be the first Streamlit command
+st.set_page_config(page_title="DeVine", layout="wide")
 
 # Initialize session state for language
 if 'language' not in st.session_state:
     st.session_state.language = 'en'
 
-# Set page config must be the first Streamlit command
-st.set_page_config(page_title="DeVine", layout="wide")
-
+from translations import TRANSLATIONS
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -15,7 +15,6 @@ from learnQuiz import learnQuiz
 from streamlit_option_menu import option_menu
 from events import events
 from calender import culturalCalendar
-# from c2 import culturalCalendar
 from journey import journeyPlanner
 from artFormGallery import artFormGallery
 import folium

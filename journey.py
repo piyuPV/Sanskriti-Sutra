@@ -5,6 +5,7 @@ from streamlit_folium import folium_static
 import pandas as pd
 from geopy.geocoders import Nominatim
 from artFormGallery import artFormGallery
+from utils import get_translation
 
 # Configure Gemini API
 genai.configure(api_key="AIzaSyDfbJhxX-_eirTsG_FyqhEKNI7Fq4GHNds")
@@ -83,8 +84,8 @@ def plot_route(origin_coords, dest_coords):
     return m
 
 def journeyPlanner():
-    st.title("Journey Planner and Guide to your Cultural Journey")
-    st.subheader("Explore the Rich Cultural Heritage of India")
+    st.title(get_translation("journey_planner_title"))
+    st.subheader(get_translation("journey_subtitle"))
 
     # Top 10 destinations data
     destinations = {
@@ -168,27 +169,26 @@ def journeyPlanner():
         if st.session_state.show_route_form.get(destination, False):
             with col_info:
                 with st.form(key=f"route_form_{destination}"):
-                    st.write("Plan your journey:")
-                    origin = st.text_input("Your starting point:")
-                    mode = st.radio("Mode of transport:", ["Road", "Train", "Flight"])
+                    st.write(get_translation("plan_journey"))
+                    origin = st.text_input(get_translation("starting_point"))
+                    mode = st.radio(get_translation("transport_mode"), ["Road", "Train", "Flight"])
                     url = f"https://www.google.com/search?q={origin}+to+{destination}+{mode}&oq=mumbai+to+delhi&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyEggBEEUYORiRAhixAxiABBiKBTIHCAIQABiABDINCAMQABiRAhiABBiKBTIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDQyODNqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8"
-                    # Form submit button
                     
-                    if st.form_submit_button("Get Route Details"):
+                    if st.form_submit_button(get_translation("get_route")):
                         if origin:
                             with st.spinner("Getting route details..."):
                                 route_info = get_route_guidance(origin, destination, mode)
                                 st.success("Route found!")
                                 st.markdown(f"""
                                     <div style='background-color: rgba(0,0,0,0.7); padding: 15px; border-radius: 5px; color: white;'>
-                                        <h4>🗺️ Journey Details</h4>
-                                        <p><b>From:</b> {origin}</p>
-                                        <p><b>To:</b> {destination}</p>
-                                        <p><b>Mode:</b> {mode}</p>
+                                        <h4>{get_translation("journey_details")}</h4>
+                                        <p><b>{get_translation("from")}:</b> {origin}</p>
+                                        <p><b>{get_translation("to")}:</b> {destination}</p>
+                                        <p><b>{get_translation("mode")}:</b> {mode}</p>
                                         <pre style='color: white; white-space: pre-wrap;'>{route_info}</pre>
                                         <a href='{url}' target='_blank' rel='noopener noreferrer'>
                                             <button style='background-color: #FF6B6B; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;'>
-                                                Book Now 🏨
+                                                {get_translation("book_now")}
                                             </button>
                                         </a>
                                     </div>
@@ -199,14 +199,13 @@ def journeyPlanner():
                                 dest_coords = get_coordinates(destination)
                                 if all(origin_coords) and all(dest_coords):
                                     # Plot route on map                                    
-                                    st.markdown("### Route Map")
+                                    st.markdown(f"### {get_translation('route_map')}")
                                     m = plot_route(origin_coords, dest_coords)
                                     folium_static(m)
-                                
                                 else:
-                                    st.error("Could not find coordinates for one or both cities")
+                                    st.error(get_translation("coords_error"))
                         else:
-                            st.error("Please enter starting point")
+                            st.error(get_translation("enter_start"))
         
         st.markdown("---")
 

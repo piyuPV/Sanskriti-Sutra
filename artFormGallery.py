@@ -1,7 +1,8 @@
 import streamlit as st
+from utils import get_translation
 
 def artFormGallery():
-    st.title("Art Forms Gallery")
+    st.title(get_translation("art_forms_gallery"))
 
     images = [
     "assets/gallery/48.jpg",

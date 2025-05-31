@@ -4,12 +4,17 @@ from streamlit_folium import folium_static
 import pandas as pd
 from folium.plugins import MarkerCluster, HeatMap, Draw
 import json
+from utils import get_translation  # Changed import
 
 def maps():
-    st.title("Cultural Heritage Map")
+    st.title(get_translation("maps_title"))
 
     # Add tabs for different map views
-    tab1, tab2, tab3 = st.tabs(["Heritage Sites", "Tourist Heatmap", "Custom Markers"])
+    tab1, tab2, tab3 = st.tabs([
+        get_translation("heritage_sites"),
+        get_translation("tourist_heatmap"),
+        get_translation("custom_markers")
+    ])
 
     with tab1:
         # Split into two columns
@@ -141,10 +146,10 @@ def maps():
 
     with tab3:
         # Custom marker placer
-        st.write("Add Custom Markers")
+        st.write(get_translation("add_custom_markers"))
         
         # File uploader for custom locations
-        uploaded_file = st.file_uploader("Upload custom locations CSV (columns: name, lat, lon, description)", type="csv")
+        uploaded_file = st.file_uploader(get_translation("upload_locations"), type="csv")
         
         m3 = folium.Map(location=[22.9734, 78.6569], zoom_start=5)
         
@@ -158,16 +163,16 @@ def maps():
                 ).add_to(m3)
         
         # Manual marker placement
-        st.write("Or add markers manually:")
+        st.write(get_translation("or_add_manually"))
         col1, col2, col3 = st.columns(3)
         with col1:
             lat = st.number_input("Latitude", -90.0, 90.0, 22.9734)
         with col2:
             lon = st.number_input("Longitude", -180.0, 180.0, 78.6569)
         with col3:
-            name = st.text_input("Location Name")
+            name = st.text_input(get_translation("location_name"))
             
-        if st.button("Add Marker"):
+        if st.button(get_translation("add_marker")):
             folium.Marker(
                 [lat, lon],
                 popup=name,
@@ -177,9 +182,9 @@ def maps():
         folium_static(m3, width=1200, height=600)
 
     # Add legend and instructions
-    st.markdown("""
+    st.markdown(f"""
         <div style='background-color: rgba(255,255,255,0.7); padding: 10px; border-radius: 5px;'>
-        <h3>Map Features</h3>
+        <h3>{get_translation("map_features")}</h3>
         <ul>
             <li>🔴 Heritage Sites - Historical and cultural landmarks</li>
             <li>🔵 Custom Markers - Your added locations</li>
