@@ -1,4 +1,10 @@
 import streamlit as st
+from translations import TRANSLATIONS
+
+# Initialize session state for language
+if 'language' not in st.session_state:
+    st.session_state.language = 'en'
+
 # Set page config must be the first Streamlit command
 st.set_page_config(page_title="DeVine", layout="wide")
 
@@ -25,11 +31,11 @@ def add_bg_from_url():
     st.markdown(
         f"""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=CormorantGaramond:wght@300;400;500;600;700&display=swap');
         
         * {{
-            font-family: 'Quicksand', sans-serif !important;
-            font-weight: 600 !important;
+            font-family: 'Cormorant Garamond', sans-serif !important;
+            font-weight: 300 !important;
         }}
         
         .stApp {{
@@ -78,17 +84,61 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()
 
 
+def get_translation(key):
+    """Get translation with fallback to English or key itself"""
+    lang = st.session_state.language
+    if lang in TRANSLATIONS:
+        # Try to get translation in selected language
+        translation = TRANSLATIONS[lang].get(key)
+        if translation:
+            return translation
+        # Fallback to English if key not found in selected language
+        if lang != 'en':
+            translation = TRANSLATIONS['en'].get(key)
+            if translation:
+                return translation
+    # Return key itself if no translation found
+    return key
+
 def streamlit_menu(example=1):
     if example == 1:
-        # 1. as sidebar menu
         with st.sidebar:
-            selected = option_menu(
-                menu_title=None,  # required
-                options=["Home", "Cultural Calendar", "Maps", "Art-form Gallery", "Journery Planner", "Learn and Play Quiz", "Chatbot"],  # required
-                icons=['house-fill', 'calendar-event-fill', 'geo-alt-fill', 'palette-fill', 'compass-fill', 'book-fill','chat-quote-fill'],
-                menu_icon="bank",  # optional
-                default_index=0,  # optional
+            # Language selector
+            selected_lang = st.selectbox(
+                "🌐 Language/भाषा",
+                ["English", "हिंदी"],
+                index=0 if st.session_state.language == 'en' else 1
             )
+            st.session_state.language = 'en' if selected_lang == "English" else 'hi'
+            
+            # Define menu options with exact keys matching translations
+            menu_options = [
+                "Home",
+                "Cultural Calendar", 
+                "Maps",
+                "Art-form Gallery",
+                "Journey Planner",
+                "Learn and Play Quiz",
+                "Chatbot"
+            ]
+            
+            # Translate menu options if Hindi is selected
+            if st.session_state.language == 'hi':
+                menu_options = [TRANSLATIONS['hi'].get(option, option) for option in menu_options]
+            
+            selected = option_menu(
+                menu_title=None,
+                options=menu_options,
+                icons=['house-fill', 'calendar-event-fill', 'geo-alt-fill', 'palette-fill', 'compass-fill', 'book-fill', 'chat-quote-fill'],
+                menu_icon="bank",
+                default_index=0,
+            )
+            
+            # Convert Hindi selection back to English for routing
+            if st.session_state.language == 'hi':
+                reverse_translations = {v: k for k, v in TRANSLATIONS['hi'].items()}
+                selected = reverse_translations.get(selected, selected)
+                
         return selected
 
     if example == 2:
@@ -130,7 +180,7 @@ def streamlit_menu(example=1):
 selected = streamlit_menu(example=EXAMPLE_NO)
 
 def home():
-    st.markdown('<p class="big-font">Cultural Heritage Hub</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="big-font">{get_translation("title")}</p>', unsafe_allow_html=True)
     
     # Load datasets with proper encoding
     foreign_visits = pd.read_csv("assets/foreignVisit.csv", encoding='latin1')
@@ -138,15 +188,18 @@ def home():
     quarterly_visitors = pd.read_csv("assets/Country Quater Wise Visitors.csv", encoding='latin1')
     places_data = pd.read_csv("assets/places.csv", encoding='latin1')  # Added encoding parameter
 
-    # Create dashboard layout with new Cultural Insights tab
-    tab1, tab2, tab3 = st.tabs(["Visitor Analytics", "Cultural Insights", "Festival Calendar"])
+    # Create dashboard tabs with translated names
+    tab1, tab2, tab3 = st.tabs([
+        get_translation("visitor_analytics"),
+        get_translation("cultural_insights"),
+        get_translation("festival_calendar")
+    ])
     
     with tab1:
         col1, col2 = st.columns([2,1])
         
         with col1:
-            # Map visualization
-            st.markdown('<div class="custom-text"><h3>Foreign Visitors Distribution</h3></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="custom-text"><h3>{get_translation("visitors_distribution")}</h3></div>', unsafe_allow_html=True)
             
             # Add year selector
             year = "2019"
@@ -164,9 +217,15 @@ def home():
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
-            # Top 5 states
-            st.markdown('<div class="custom-text"><h3>Top 5 States</h3></div>', unsafe_allow_html=True)
-            metric = st.radio("Select Metric", ["Foreign Visitors", "Domestic Visitors", "Growth Rate"])
+            st.markdown(f'<div class="custom-text"><h3>{get_translation("top_states")}</h3></div>', unsafe_allow_html=True)
+            metric = st.radio(
+                get_translation("select_metric"),
+                [
+                    get_translation("foreign_visitors"),
+                    get_translation("domestic_visitors"),
+                    get_translation("growth_rate")
+                ]
+            )
             
             if metric == "Foreign Visitors":
                 column = "Foreign - 2019"
@@ -183,14 +242,14 @@ def home():
             st.plotly_chart(fig2, use_container_width=True)
         
         # Quarterly trends
-        st.markdown('<div class="custom-text"><h3>Quarterly Visitor Trends by Country</h3></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="custom-text"><h3>{get_translation("quarterly_trends")}</h3></div>', unsafe_allow_html=True)
         
         # Clean column names for quarterly data
         quarters = [col for col in quarterly_visitors.columns if 'quarter' in col.lower() and '2019' in col]
         
         # Country selector with search
         selected_country = st.selectbox(
-            "Select Country",
+            get_translation("select_country"),
             quarterly_visitors['Country of Nationality'].unique(),
             index=0
         )
@@ -205,16 +264,16 @@ def home():
         fig3 = go.Figure()
         fig3.add_trace(go.Bar(x=quarter_labels, y=quarter_values))
         fig3.update_layout(
-            title=f"Quarterly Visitors from {selected_country} (2019)",
-            xaxis_title="Quarter",
-            yaxis_title="Visitors %"
+            title=f"{get_translation('quarterly_visitors')} {selected_country} (2019)",
+            xaxis_title=get_translation("quarter"),
+            yaxis_title=get_translation("visitors_percentage")
         )
         st.plotly_chart(fig3, use_container_width=True)
         
         # Additional visualization - Country comparison
-        st.markdown('<div class="custom-text"><h3>Country Comparison</h3></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="custom-text"><h3>{get_translation("country_comparison")}</h3></div>', unsafe_allow_html=True)
         selected_countries = st.multiselect(
-            "Select Countries to Compare",
+            get_translation("select_countries"),
             quarterly_visitors['Country of Nationality'].unique(),
             default=quarterly_visitors['Country of Nationality'].unique()[:3]
         )
@@ -236,14 +295,14 @@ def home():
             ))
             
         fig4.update_layout(
-            title="Country-wise Quarterly Comparison (2019)",
-            xaxis_title="Quarter",
-            yaxis_title="Visitors %"
+            title=get_translation("country_wise_quarterly_comparison"),
+            xaxis_title=get_translation("quarter"),
+            yaxis_title=get_translation("visitors_percentage")
         )
         st.plotly_chart(fig4, use_container_width=True)
     
     with tab2:
-        st.markdown('<div class="custom-text"><h3>Cultural Heritage Distribution</h3></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="custom-text"><h3>{get_translation("cultural_heritage_distribution")}</h3></div>', unsafe_allow_html=True)
         
         col1, col2 = st.columns([1, 1])
         
@@ -255,7 +314,7 @@ def home():
             fig_art = px.bar(art_by_state.nlargest(10, 'count'), 
                            x='state', 
                            y='count',
-                           title='Top 10 States by Cultural Heritage Sites',
+                           title=get_translation('top_states_by_cultural_heritage'),
                            color='count',
                            color_continuous_scale='Oranges')
             st.plotly_chart(fig_art, use_container_width=True)
@@ -265,15 +324,15 @@ def home():
             interest_dist = places_data['interest'].value_counts()
             fig_interest = px.pie(values=interest_dist.values, 
                                 names=interest_dist.index,
-                                title='Distribution of Cultural Experiences',
+                                title=get_translation('distribution_of_cultural_experiences'),
                                 color_discrete_sequence=px.colors.sequential.RdBu)
             st.plotly_chart(fig_interest, use_container_width=True)
 
         # Cultural Experience Map
-        st.markdown('<div class="custom-text"><h3>Cultural Experience Map</h3></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="custom-text"><h3>{get_translation("cultural_experience_map")}</h3></div>', unsafe_allow_html=True)
         
         selected_experience = st.selectbox(
-            "Select Cultural Experience",
+            get_translation("select_cultural_experience"),
             places_data['interest'].unique()
         )
         
@@ -287,12 +346,12 @@ def home():
                                   color='google_rating',
                                   size_max=15,
                                   zoom=4,
-                                  title=f'Locations for {selected_experience}',
+                                  title=f'{get_translation("locations_for")} {selected_experience}',
                                   mapbox_style="carto-positron")
         st.plotly_chart(fig_map, use_container_width=True)
 
         # Responsible Tourism Metrics
-        st.markdown('<div class="custom-text"><h3>Sustainable Tourism Insights</h3></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="custom-text"><h3>{get_translation("sustainable_tourism_insights")}</h3></div>', unsafe_allow_html=True)
         
         col3, col4 = st.columns([1, 1])
         
@@ -307,7 +366,7 @@ def home():
             price_dist = places_data['price_category'].value_counts()
             fig_price = px.pie(values=price_dist.values,
                              names=price_dist.index,
-                             title='Price Range Distribution of Cultural Experiences',
+                             title=get_translation('price_range_distribution'),
                              color_discrete_sequence=px.colors.sequential.Greens)
             st.plotly_chart(fig_price, use_container_width=True)
 
@@ -315,14 +374,14 @@ def home():
             # Rating Distribution
             rating_dist = places_data.groupby('interest')['google_rating'].mean().sort_values(ascending=False)
             fig_rating = px.bar(rating_dist,
-                              title='Average Ratings by Experience Type',
+                              title=get_translation('average_ratings_by_experience_type'),
                               color=rating_dist.values,
                               color_continuous_scale='Viridis')
             st.plotly_chart(fig_rating, use_container_width=True)
 
     with tab3:
         # Festival Calendar
-        st.markdown('<div class="custom-text"><h3>Upcoming Festivals</h3></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="custom-text"><h3>{get_translation("upcoming_festivals")}</h3></div>', unsafe_allow_html=True)
         festivals['Date'] = pd.to_datetime(festivals['Date'] + ' ' + festivals['Year'].astype(str))
         current_festivals = festivals.sort_values('Date')[['Festival name', 'Date', 'Day']].head(10)
         st.dataframe(current_festivals, use_container_width=True)

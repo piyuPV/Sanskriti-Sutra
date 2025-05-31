@@ -151,7 +151,7 @@ def journeyPlanner():
         for idx, image_path in enumerate(data["images"]):
             with cols[idx]:
                 st.image(image_path, use_container_width=True, output_format='auto', 
-                        caption=f"Image {idx+1}", width=300)
+                         width=300)
         
         # Create columns for buttons and info
         col_button1, col_button2, col_info = st.columns([1, 1, 3])
