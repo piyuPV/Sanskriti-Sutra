@@ -9,6 +9,7 @@ from learnQuiz import learnQuiz
 from streamlit_option_menu import option_menu
 from events import events
 from calender import culturalCalendar
+# from c2 import culturalCalendar
 from journey import journeyPlanner
 from artFormGallery import artFormGallery
 import folium
@@ -24,14 +25,22 @@ def add_bg_from_url():
     st.markdown(
         f"""
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=CormorantGaramond:wght@300;400;500;600;700&display=swap');
+        
+        * {{
+            font-family: 'Cormorant Garamond', sans-serif !important;
+            font-weight: 300 !important;
+        }}
+        
         .stApp {{
-            background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/bg.avif")}");
+            background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/bg.png")}");
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
         }}
         .big-font {{
             font-size: 50px !important;
+            font-weight: 700 !important;
             color: #fff;
             text-shadow: 2px 2px 4px #000;
         }}
@@ -41,6 +50,21 @@ def add_bg_from_url():
             padding: 15px;
             border-radius: 5px;
             margin: 10px 0;
+        }}
+        
+        .stMarkdown, .stText, .stSelectbox, .stRadio, div.stButton > button, .stTab {{
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
+        }}
+        
+        div[data-testid="stSidebarNav"] li div {{
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
+        }}
+
+        .plotly-graph text {{
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
         }}
         </style>
         """,

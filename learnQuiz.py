@@ -3,7 +3,7 @@ import time
 import random
 
 def learnQuiz():
-    # Initialize session state for quiz
+    # Initialize all session state variables at the start
     if 'quiz_started' not in st.session_state:
         st.session_state.quiz_started = False
     if 'answers' not in st.session_state:
@@ -14,6 +14,8 @@ def learnQuiz():
         st.session_state.time_left = 60
     if 'submitted' not in st.session_state:
         st.session_state.submitted = False
+    if 'current_questions' not in st.session_state:
+        st.session_state.current_questions = []
 
     st.title("Learn & Quiz - Indian Cultural Heritage")
     
@@ -422,21 +424,53 @@ def learnQuiz():
         st.header(f"Learning about {selected_topic}")
         for item, content in topics[selected_topic].items():
             with st.expander(f"Learn about {item}"):
-                try:
-                    # Set standard image size with width=800 and maintain aspect ratio
+                col_left, col_right = st.columns([0.8, 1.2])  # Adjust ratio for image and text
+                
+                with col_left:
+                    try:
+                        st.markdown("""
+                            <style>
+                            .topic-image {
+                                border-radius: 10px;
+                                transition: transform 0.3s;
+                                width: 100%;
+                            }
+                            .topic-image:hover {
+                                transform: scale(1.02);
+                                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                            }
+                            </style>
+                        """, unsafe_allow_html=True)
+                        # Changed use_column_width to use_container_width
+                        st.image(content["image"], use_container_width=True, caption=item)
+                    except:
+                        st.error(f"Image not found for {item}")
+                
+                with col_right:
                     st.markdown("""
                         <style>
-                        img {
-                            width: 800px !important;
-                            margin: 0 auto;
-                            display: block;
+                        .description-box {
+                            background-color: rgba(255,255,255,0.1);
+                            padding: 20px;
+                            border-radius: 10px;
+                            height: 100%;
+                            color: white;
+                            margin-left: 20px;
+                        }
+                        .description-box h3 {
+                            color: #FFD700;
+                            margin-bottom: 15px;
                         }
                         </style>
                     """, unsafe_allow_html=True)
-                    st.image(content["image"], caption=item, use_container_width=False)
-                except:
-                    st.error(f"Image not found for {item}")
-                st.markdown(content["description"])
+                    
+                    description_html = content["description"].replace("\n", "<br>")
+                    st.markdown(f"""
+                        <div class="description-box">
+                            <h3>{item}</h3>
+                            {description_html}
+                        </div>
+                    """, unsafe_allow_html=True)
 
         # Start Quiz button
         if not st.session_state.quiz_started and st.button("Take Quiz"):
