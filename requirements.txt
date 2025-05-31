@@ -1,0 +1,16 @@
+streamlit
+pandas
+plotly
+folium
+streamlit-folium
+streamlit-option-menu
+snowflake-connector-python
+snowflake-sqlalchemy
+python-dotenv
+numpy
+requests
+beautifulsoup4
+pillow
+geopy
+streamlit_calendar
+google.generativeai
