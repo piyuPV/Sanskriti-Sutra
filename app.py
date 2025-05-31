@@ -25,11 +25,11 @@ def add_bg_from_url():
     st.markdown(
         f"""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=CormorantGaramond:wght@300;400;500;600;700&display=swap');
         
         * {{
-            font-family: 'Quicksand', sans-serif !important;
-            font-weight: 600 !important;
+            font-family: 'Cormorant Garamond', sans-serif !important;
+            font-weight: 300 !important;
         }}
         
         .stApp {{
