@@ -38,7 +38,7 @@ def add_bg_from_url():
         }}
         
         .stApp {{
-            background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/bg.png")}");
+            background-image: url("data:image/png;base64,{get_base64_of_bin_file("assets/basab.jpg")}");
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
