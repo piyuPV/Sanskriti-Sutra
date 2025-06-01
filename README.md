@@ -12,10 +12,10 @@ Resources:
 
 # Team Name: DeVine
 Members:
-Adarsh Gupta @Adarsh7825
-Piyush Sahani @piyuPV
-Durvesh Kajrekar @durveshhh
-Abhishek Gurav  @abhishekgurav10
+1. Adarsh Gupta @Adarsh7825
+2. Piyush Sahani @piyuPV
+3. Durvesh Kajrekar @durveshhh
+4. Abhishek Gurav  @abhishekgurav10
 
 # Our solution: Sanskriti Sutra: Weaving India's Cultural Tapestry
 Deployed Link: https://sanskriti-sutra.streamlit.app/
