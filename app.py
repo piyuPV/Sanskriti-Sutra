@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Set page config must be the first Streamlit command
-st.set_page_config(page_title="DeVine", layout="wide")
+st.set_page_config(page_title="Sanskriti Sutra", layout="wide")
 
 # Initialize session state for language
 if 'language' not in st.session_state:
@@ -102,20 +102,21 @@ def get_translation(key):
 def streamlit_menu(example=1):
     if example == 1:
         with st.sidebar:
-            # Language selector using radio buttons
-            selected_lang = st.radio(
-                "🌐 Select Language/भाषा निवडा/भाषा चुनें",
-                options=["English", "मराठी", "हिंदी"],
-                horizontal=True,
-                index=0 if st.session_state.language == 'en' 
-                      else 1 if st.session_state.language == 'mr'
-                      else 2
-            )
-            
-            # Update session state language
-            st.session_state.language = ('en' if selected_lang == "English" 
-                                       else 'mr' if selected_lang == "मराठी" 
-                                       else 'hi')
+            # Add decorative header to sidebar
+            st.markdown("""
+                <div style='text-align: center; padding: 10px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(139,69,19,0.6)); border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);'>
+                    <h1 style='color: #FFD700; text-shadow: 2px 2px 4px #000000; font-family: "Cormorant Garamond", serif; margin-bottom: 5px;'>
+                        संस्कृति सूत्र
+                    </h1>
+                    <h2 style='color: #ffffff; text-shadow: 1px 1px 2px #000000; font-family: "Cormorant Garamond", serif; font-size: 24px; margin-bottom: 5px;'>
+                        Sanskriti Sutra
+                    </h2>
+                    <p style='color: #E6E6FA; font-style: italic; font-size: 14px; margin: 5px 0;'>
+                        Weaving India's Cultural Tapestry
+                    </p>
+                    <div style='border-top: 1px solid rgba(255,255,255,0.3); margin: 10px 0;'></div>
+                </div>
+            """, unsafe_allow_html=True)
             
             # Define menu options with exact keys matching translations
             menu_options = [
@@ -123,7 +124,7 @@ def streamlit_menu(example=1):
                 "Cultural Calendar", 
                 "Maps",
                 "Art-form Gallery",
-                "Journey Planner",  # Fixed spelling of Journey
+                "Journey Planner",
                 "Learn and Play Quiz",
                 "Chatbot"
             ]
@@ -141,6 +142,23 @@ def streamlit_menu(example=1):
                 menu_icon="bank",
                 default_index=0,
             )
+            
+            st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
+            
+            # Language selector using radio buttons
+            selected_lang = st.radio(
+                "🌐 Select Language/भाषा निवडा/भाषा चुनें",
+                options=["English", "मराठी", "हिंदी"],
+                horizontal=True,
+                index=0 if st.session_state.language == 'en' 
+                      else 1 if st.session_state.language == 'mr'
+                      else 2
+            )
+            
+            # Update session state language
+            st.session_state.language = ('en' if selected_lang == "English" 
+                                       else 'mr' if selected_lang == "मराठी" 
+                                       else 'hi')
             
             # Convert Hindi or Marathi selection back to English for routing
             if st.session_state.language == 'hi' or st.session_state.language == 'mr':
@@ -188,7 +206,7 @@ def streamlit_menu(example=1):
 selected = streamlit_menu(example=EXAMPLE_NO)
 
 def home():
-    st.markdown(f'<p class="big-font">{get_translation("title")}</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="big-font">Sanskriti Sutra: Weaving India\'s Cultural Tapestry</p>', unsafe_allow_html=True)
     
     # Load datasets with proper encoding
     foreign_visits = pd.read_csv("assets/foreignVisit.csv", encoding='latin1')
@@ -204,6 +222,15 @@ def home():
     ])
     
     with tab1:
+        st.markdown("""
+            <div class="custom-text">
+                <h3>Tourism Analytics Dashboard</h3>
+                <p>Explore the dynamic patterns of tourism across India through interactive visualizations. 
+                The scatter map shows foreign visitor distribution, with circle size indicating visitor volume 
+                and colors representing growth rate. Hover over points to see detailed statistics.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
         col1, col2 = st.columns([2,1])
         
         with col1:
@@ -225,7 +252,15 @@ def home():
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
-            st.markdown(f'<div class="custom-text"><h3>{get_translation("top_states")}</h3></div>', unsafe_allow_html=True)
+            st.markdown("""
+                <div class="custom-text">
+                    <h3>Top Performing States</h3>
+                    <p>Compare the leading states based on visitor metrics. The bar chart highlights 
+                    the top 5 states, allowing analysis of foreign visitors, domestic tourists, 
+                    and year-over-year growth rates.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
             metric = st.radio(
                 get_translation("select_metric"),
                 [
@@ -279,7 +314,15 @@ def home():
         st.plotly_chart(fig3, use_container_width=True)
         
         # Additional visualization - Country comparison
-        st.markdown(f'<div class="custom-text"><h3>{get_translation("country_comparison")}</h3></div>', unsafe_allow_html=True)
+        st.markdown("""
+            <div class="custom-text">
+                <h3>Cross-Country Tourism Analysis</h3>
+                <p>Compare visitor patterns across multiple countries simultaneously. The line graph 
+                enables identification of common trends, seasonal variations, and relative tourism 
+                volumes between different nationalities.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
         selected_countries = st.multiselect(
             get_translation("select_countries"),
             quarterly_visitors['Country of Nationality'].unique(),
@@ -310,6 +353,15 @@ def home():
         st.plotly_chart(fig4, use_container_width=True)
     
     with tab2:
+        st.markdown("""
+            <div class="custom-text">
+                <h3>Cultural Heritage Insights</h3>
+                <p>Discover the rich tapestry of India's cultural heritage through interactive 
+                visualizations. The maps and charts reveal the distribution of art forms, cultural 
+                sites, and traditional practices across different regions.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
         st.markdown(f'<div class="custom-text"><h3>{get_translation("cultural_heritage_distribution")}</h3></div>', unsafe_allow_html=True)
         
         col1, col2 = st.columns([1, 1])
@@ -364,6 +416,15 @@ def home():
         col3, col4 = st.columns([1, 1])
         
         with col3:
+            st.markdown("""
+                <div class="custom-text">
+                    <h3>Cultural Experience Accessibility</h3>
+                    <p>Explore the accessibility of cultural experiences through price range analysis. 
+                    The pie chart breaks down attractions by cost category, from free experiences to 
+                    premium cultural offerings.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
             # Price Range Distribution
             price_bins = [0, 50, 200, 500, 1000, float('inf')]
             price_labels = ['Free', 'Budget', 'Moderate', 'Premium', 'Luxury']
@@ -379,6 +440,15 @@ def home():
             st.plotly_chart(fig_price, use_container_width=True)
 
         with col4:
+            st.markdown("""
+                <div class="custom-text">
+                    <h3>Experience Quality Metrics</h3>
+                    <p>Analyze the quality of different cultural experiences through visitor ratings. 
+                    The bar chart compares average ratings across various experience types, helping 
+                    identify the most appreciated cultural attractions.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
             # Rating Distribution
             rating_dist = places_data.groupby('interest')['google_rating'].mean().sort_values(ascending=False)
             fig_rating = px.bar(rating_dist,

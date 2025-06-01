@@ -10,8 +10,8 @@ load_dotenv()
 genai.configure(api_key="AIzaSyCBATZFHWzLiHnsN_CKUV0Nj9f8sXjNLYU")
 
 def chatbot():
-    st.title("🎨 Cultural Companion")
-    st.caption("Ask about art, culture, tourism, or history")
+    st.title("🎨 Sanskriti Sutra AI Assistant")
+    st.caption("Your guide to Indian art, culture, tourism, and history")
     """Streamlit chatbot function restricted to art, culture, tourism, and history"""
     # Initialize model with domain restrictions
     if "model" not in st.session_state:

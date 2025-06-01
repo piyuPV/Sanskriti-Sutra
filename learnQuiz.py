@@ -408,8 +408,8 @@ def learnQuiz():
         st.session_state.answers = {}
     if 'score' not in st.session_state:
         st.session_state.score = 0
-    if 'time_left' not in st.session_state:
-        st.session_state.time_left = 60
+    if 'start_time' not in st.session_state:
+        st.session_state.start_time = None
     if 'submitted' not in st.session_state:
         st.session_state.submitted = False
     if 'current_questions' not in st.session_state:
@@ -468,9 +468,9 @@ def learnQuiz():
         # Quiz section
         if not st.session_state.quiz_started and st.button(get_translation("take_quiz")):
             st.session_state.quiz_started = True
-            st.session_state.time_left = 60
             st.session_state.submitted = False
             st.session_state.score = 0
+            st.session_state.start_time = time.time()  # Set start time when quiz begins
             questions = quiz_questions[selected_topic]
             random.shuffle(questions)
             st.session_state.current_questions = questions[:10]
@@ -479,7 +479,18 @@ def learnQuiz():
         # Display quiz if started
         if st.session_state.quiz_started:
             st.header(get_translation("quiz_time"))
-            st.write(get_translation("time_remaining").format(st.session_state.time_left))
+            
+            # Calculate time remaining
+            if st.session_state.start_time:
+                elapsed_time = int(time.time() - st.session_state.start_time)
+                time_remaining = max(60 - elapsed_time, 0)
+                st.write(get_translation("time_remaining").format(time_remaining))
+                
+                # Auto-submit if time is up
+                if time_remaining <= 0 and not st.session_state.submitted:
+                    st.session_state.submitted = True
+                    st.warning(get_translation("times_up"))
+                    st.rerun()
             
             # Display questions
             for i, q in enumerate(st.session_state.current_questions):
@@ -503,13 +514,5 @@ def learnQuiz():
                 if st.button(get_translation("take_another")):
                     st.session_state.quiz_started = False
                     st.session_state.submitted = False
-                    st.rerun()
-
-            # Timer update
-            if not st.session_state.submitted:
-                time.sleep(1)
-                st.session_state.time_left -= 1
-                if st.session_state.time_left <= 0:
-                    st.session_state.submitted = True
-                    st.warning(get_translation("times_up"))
+                    st.session_state.start_time = None  # Reset timer
                     st.rerun()
