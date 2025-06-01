@@ -161,9 +161,9 @@ def journeyPlanner():
             if st.button(f"Route to {destination}", key=f"route_{destination}"):
                 st.session_state.show_route_form[destination] = True
 
-        with col_button2:
-            if st.button(f"More Images", key=f"art_{destination}"):
-                artFormGallery()
+        # with col_button2:
+        #     if st.button(f"More Images", key=f"art_{destination}"):
+        #         artFormGallery()
         
         # Show form if button was clicked
         if st.session_state.show_route_form.get(destination, False):
