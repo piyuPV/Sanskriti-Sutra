@@ -183,7 +183,7 @@ def maps():
 
     # Add legend and instructions
     st.markdown(f"""
-        <div style='background-color: rgba(255,255,255,0.7); padding: 10px; border-radius: 5px;'>
+        <div style='background-color: rgba(255,255,255,0.2); padding: 10px; border-radius: 5px;'>
         <h3>{get_translation("map_features")}</h3>
         <ul>
             <li>🔴 Heritage Sites - Historical and cultural landmarks</li>

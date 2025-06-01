@@ -30,10 +30,10 @@ def add_bg_from_url():
     st.markdown(
         f"""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=CormorantGaramond:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
         
         * {{
-            font-family: 'Cormorant Garamond', sans-serif !important;
+            font-family: 'Poppins', sans-serif !important;
             font-weight: 300 !important;
         }}
         
