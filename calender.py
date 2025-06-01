@@ -65,7 +65,7 @@ def culturalCalendar():
 
             with col1:
                 # Show image
-                image_path = f"assets/calendar/{fest['ImageFile']}.jpg"
+                image_path = f"assets/{fest['ImageFile']}.jpg"
                 if os.path.exists(image_path):
                     img = Image.open(image_path)
                     st.image(img, use_container_width=True)
