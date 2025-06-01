@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configure API - add your key in .env file
-genai.configure(api_key="AIzaSyCBATZFHWzLiHnsN_CKUV0Nj9f8sXjNLYU")
+genai.configure(api_key="AIzaSyAbObuFJoC-V3Yx6PQHAj8l4u6qCDnFVw0")
 
 def chatbot():
     st.title("🎨 Sanskriti Sutra AI Assistant")

@@ -97,4 +97,3 @@ def culturalCalendar():
             st.error(f"Festival '{title}' not found in data.")
     else:
         st.info("📅 Click on a festival from the calendar to view its details.")
-

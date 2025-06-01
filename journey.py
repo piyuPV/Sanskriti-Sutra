@@ -8,7 +8,7 @@ from artFormGallery import artFormGallery
 from utils import get_translation
 
 # Configure Gemini API
-genai.configure(api_key="AIzaSyDfbJhxX-_eirTsG_FyqhEKNI7Fq4GHNds")
+genai.configure(api_key="AIzaSyAbObuFJoC-V3Yx6PQHAj8l4u6qCDnFVw0")
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 def get_route_suggestions(origin, destination, mode):
