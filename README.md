@@ -10,6 +10,7 @@ Resources:
 2. Find out seasonalities and trends in tourism to cultural hotspots. Identify areas that are relatively untouched and why they are so.
 3. Create a story covering all these aspects through Snowflake and Streamlit.
 
+(We were not able to submit this due to technical reasons... but you can enjoy this project and you if like it I'd really appreciate a star!!) 
 # Team Name: DeVine
 Members:
 1. Adarsh Gupta @Adarsh7825
